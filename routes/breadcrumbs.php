@@ -1,0 +1,25 @@
+<?php
+
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+
+// Home
+Breadcrumbs::for('home', function ($trail) {
+    $trail->push('Home', route('home'));
+});
+
+// Chemicals
+Breadcrumbs::for('chemicals.index', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Chemicals', route('chemicals.index'));
+});
+
+Breadcrumbs::for('chemicals.create', function ($trail) {
+    $trail->parent('chemicals.index');
+    $trail->push('Add', route('chemicals.index'));
+});
+
+// Show Chemical
+Breadcrumbs::for('chemicals.show', function ($trail, $chemical) {
+    $trail->parent('chemicals.index');
+    $trail->push($chemical->chemical_formula, route('chemicals.show', $chemical->id));
+});
