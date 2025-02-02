@@ -28,4 +28,9 @@ class Chemical extends Model
 
     // If you want to disable timestamps (created_at and updated_at)
     public $timestamps = true; // Set to false if you don't want timestamps
+
+    public function measureUnit()
+    {
+        return $this->belongsTo(MeasureUnit::class, 'measure_unit_id');
+    }
 }

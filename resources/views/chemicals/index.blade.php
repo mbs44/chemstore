@@ -31,8 +31,14 @@
                 </div>
                 <div class="div-input">
                     <label for="measure_unit_id" class="form-label">Measure Unit</label>
-                    <input type="text" class="form-input" id="measure_unit_id" name="measure_unit_id"
-                           value="{{ request()->input('measure_unit_id') }}">
+                    <select id="measure_unit_id" name="measure_unit_id" class="form-input">
+                        <option value="">Select a measure unit</option>
+                        @foreach ($measureUnits as $unit)
+                            <option value="{{ $unit->id }}" {{ request()->input('measure_unit_id') == $unit->id ? 'selected' : '' }}>
+                                {{ $unit->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <button type="submit" class="button-submit">Filter</button>
@@ -96,7 +102,7 @@
                     <td class="table-cell text-left">{{ $chemical->chemical_name_sk }}</td>
                     <td class="table-cell text-left">{{ $chemical->chemical_formula }}</td>
                     <td class="table-cell text-right">{{ $chemical->quantity }}</td>
-                    <td class="table-cell text-left">{{ $chemical->measure_unit_id }}</td>
+                    <td class="table-cell text-left">{{ $chemical->measureUnit->name ?? 'N/A' }}</td>
 
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
@@ -113,13 +119,13 @@
             @endforeach
             </tbody>
         </table>
-
-        <a href="{{ route('chemicals.create') }}" class="button-submit">Add New Chemical</a>
-
         <!-- Pagination -->
         <div class="mt-4">
             {{ $chemicals->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>
+
+        <a href="{{ route('chemicals.create') }}" class="button-submit">Add New Chemical</a>
+
     </div>
 @endsection
 

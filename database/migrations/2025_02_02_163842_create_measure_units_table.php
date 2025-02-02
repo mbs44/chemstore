@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chemicals', function (Blueprint $table) {
+        Schema::create('measure_units', function (Blueprint $table) {
             $table->id();
-            $table->string('chemical_name_en');
-            $table->string('chemical_name_sk');
-            $table->string('chemical_formula');
-            $table->decimal('quantity');
-            $table->integer('measure_unit_id');
-            $table->text('description')->nullable();
+            $table->string('isoName'); // The name of the measure unit
+            $table->string('name'); // The name of the measure unit
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chemicals');
+        Schema::dropIfExists('measure_units');
     }
 };

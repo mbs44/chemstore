@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chemical; // Make sure to import the Chemical model
+use App\Models\MeasureUnit;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -60,13 +61,16 @@ class ChemicalController extends Controller
 
         // Retrieve chemicals with sorting and pagination
         $chemicals = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
-
-        return view('chemicals.index', compact('chemicals', 'sortColumn', 'sortDirection'));
+        // Fetch all measure units for the filter
+        $measureUnits = MeasureUnit::all();
+        return view('chemicals.index',
+            compact('chemicals', 'sortColumn', 'sortDirection', 'measureUnits'));
     }
 
     public function create(): View
     {
-        return view('chemicals.create');
+        $measureUnits = MeasureUnit::all(); // Fetch all measure units
+        return view('chemicals.create', compact('measureUnits'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -77,7 +81,7 @@ class ChemicalController extends Controller
             'chemical_name_sk' => 'required|string|max:255',
             'chemical_formula' => 'required|string|max:255',
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
-            'measure_unit_id' => 'required|integer',
+            'measure_unit_id' => 'required|exists:measure_units,id',
             'description' => 'nullable|string',
         ]);
 
@@ -85,14 +89,16 @@ class ChemicalController extends Controller
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
     }
 
-    public function show(Chemical $chemical): View
+    public function show(Chemical $id): View
     {
+        $chemical = Chemical::with('measureUnit')->findOrFail($id);
         return view('chemicals.show', compact('chemical'));
     }
 
     public function edit(Chemical $chemical): View
     {
-        return view('chemicals.edit', compact('chemical'));
+        $measureUnits = MeasureUnit::all(); // Fetch all measure units
+        return view('chemicals.edit', compact('chemical', 'measureUnits'));
     }
 
     public function update(Request $request, Chemical $chemical): RedirectResponse
@@ -102,7 +108,7 @@ class ChemicalController extends Controller
             'chemical_name_sk' => 'required|string|max:255',
             'chemical_formula' => 'required|string|max:255',
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
-            'measure_unit_id' => 'required|integer',
+            'measure_unit_id' => 'required|exists:measure_units,id',
             'description' => 'nullable|string',
         ]);
 

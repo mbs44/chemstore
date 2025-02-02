@@ -43,9 +43,14 @@
 
                 <div class="div-input">
                     <label for="measure_unit_id" class="form-label">Measure Unit</label>
-                    <input type="text" id="measure_unit_id" name="measure_unit_id"
-                           value="{{ old('measure_unit_id', $chemical->measure_unit_id) }}"
-                           class="form-input" required>
+                    <select id="measure_unit_id" name="measure_unit_id" class="form-input" required>
+                        <option value="">Measure unit</option>
+                        @foreach ($measureUnits as $unit)
+                            <option value="{{ $unit->id }}" {{ (old('measure_unit_id', $chemical->measure_unit_id) == $unit->id) ? 'selected' : '' }}>
+                                {{ $unit->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="div-full">
