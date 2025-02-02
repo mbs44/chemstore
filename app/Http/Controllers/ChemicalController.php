@@ -80,10 +80,8 @@ class ChemicalController extends Controller
             'measure_unit_id' => 'required|integer',
             'description' => 'nullable|string',
         ]);
-        Log::info('Validation passed.');
-        DB::enableQueryLog();
+
         Chemical::create($request->all());
-        Log::info(DB::getQueryLog());
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
     }
 

@@ -23,3 +23,9 @@ Breadcrumbs::for('chemicals.show', function ($trail, $chemical) {
     $trail->parent('chemicals.index');
     $trail->push($chemical->chemical_formula, route('chemicals.show', $chemical->id));
 });
+
+// Edit Chemical
+Breadcrumbs::for('chemicals.edit', function ($trail, $chemical) {
+    $trail->parent('chemicals.index');
+    $trail->push('Edit Chemical', route('chemicals.edit', $chemical->id));
+});
