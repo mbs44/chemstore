@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chemical extends Model
 {
@@ -29,8 +32,13 @@ class Chemical extends Model
     // If you want to disable timestamps (created_at and updated_at)
     public $timestamps = true; // Set to false if you don't want timestamps
 
-    public function measureUnit()
+    public function measureUnit() : BelongsTo
     {
         return $this->belongsTo(MeasureUnit::class, 'measure_unit_id');
+    }
+
+    public function dangerousProperties() : BelongsToMany
+    {
+        return $this->belongsToMany(DangerousProperty::class, 'chemical_dangerous_property');
     }
 }

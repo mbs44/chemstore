@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(MeasureUnitsTableSeeder::class);
+        $this->call(DangerousPropertiesTableSeeder::class);
     }
 }

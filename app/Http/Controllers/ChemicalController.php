@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chemical; // Make sure to import the Chemical model
+use App\Models\DangerousProperty;
 use App\Models\MeasureUnit;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Illuminate\Http\Response;
 class ChemicalController extends Controller
 {
 
-        public function index(Request $request)
+    public function index(Request $request)
     {
         // Get the filter parameters from the request
         $chemicalNameEn = $request->input('chemical_name_en');
@@ -69,8 +70,9 @@ class ChemicalController extends Controller
 
     public function create(): View
     {
+        $dangerousProperties = DangerousProperty::all();
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
-        return view('chemicals.create', compact('measureUnits'));
+        return view('chemicals.create', compact('measureUnits', 'dangerousProperties'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -83,22 +85,33 @@ class ChemicalController extends Controller
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
             'measure_unit_id' => 'required|exists:measure_units,id',
             'description' => 'nullable|string',
+            'dangerous_properties' => 'array', // Validate as an array
+            'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
 
-        Chemical::create($request->all());
+        $chemical = Chemical::create($request->all());
+
+        if ($request->has('dangerous_properties')) {
+            $chemical->dangerousProperties()->attach($request->dangerous_properties);
+        }
+
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
     }
 
-    public function show(Chemical $id): View
+    public function show( $id=1): View
     {
-        $chemical = Chemical::with('measureUnit')->findOrFail($id);
+        Log::info('received Id :' . $id);
+        $chemical = Chemical::with(['measureUnit', 'dangerousProperties'])->findOrFail($id);
         return view('chemicals.show', compact('chemical'));
     }
 
     public function edit(Chemical $chemical): View
     {
+        $dangerousProperties = DangerousProperty::all();
+        $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
-        return view('chemicals.edit', compact('chemical', 'measureUnits'));
+        return view('chemicals.edit', compact(
+            'chemical', 'measureUnits', 'dangerousProperties', 'selectedProperties'));
     }
 
     public function update(Request $request, Chemical $chemical): RedirectResponse
@@ -110,9 +123,13 @@ class ChemicalController extends Controller
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
             'measure_unit_id' => 'required|exists:measure_units,id',
             'description' => 'nullable|string',
+            'dangerous_properties' => 'array', // Validate as an array
+            'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
 
         $chemical->update($request->all());
+        $chemical->dangerousProperties()->sync($request->dangerous_properties);
+
         return redirect()->route('chemicals.index')->with('success', 'Chemical updated successfully.');
     }
 

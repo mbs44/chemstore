@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class MeasureUnitsTableSeeder extends Seeder
 {
-    public function run()
+    public function run() : void
     {
         // Insert measure units into the measure_units table
         DB::table('measure_units')->insert([

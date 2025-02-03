@@ -5,7 +5,7 @@
 @section('content')
     <div class="div-container">
         <!-- Render Breadcrumbs -->
-
+        @if($chemical)
         <h1 class="h1-screen">{{ $chemical->chemical_formula }}</h1>
         <div class="div-full">
             <p class="mt-2"><strong>Chemical Name (EN):</strong> {{ $chemical->chemical_name_en }}</p>
@@ -15,7 +15,21 @@
             <p class="mt-2"><strong>Description:</strong> {{ $chemical->description }}</p>
             <p class="mt-2"><strong>Created At:</strong> {{ $chemical->created_at }}</p>
             <p class="mt-2"><strong>Updated At:</strong> {{ $chemical->updated_at }}</p>
+
+            <p class="mt-2">Dangerous Properties</p>
+            <ul>
+                @if($chemical->dangerousProperties->isEmpty())
+                    <li>No dangerous properties associated with this chemical.</li>
+                @else
+                    @foreach($chemical->dangerousProperties as $property)
+                        <li>{{ $property->name_en }}: {{ $property->description_en }}</li>
+                    @endforeach
+                @endif
+            </ul>
         </div>
+        @else
+            <p>No chemical found.</p>
+        @endif
         <a href="{{ route('chemicals.index') }}" class="button-submit">Back to List</a>
     </div>
 @endsection

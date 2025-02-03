@@ -19,9 +19,9 @@ Breadcrumbs::for('chemicals.create', function ($trail) {
 });
 
 // Show Chemical
-Breadcrumbs::for('chemicals.show', function ($trail, $chemical) {
+Breadcrumbs::for('chemicals.show', function ($trail, $id) {
     $trail->parent('chemicals.index');
-    $trail->push($chemical->chemical_formula, route('chemicals.show', $chemical->id));
+    $trail->push( 'ID: '.$id, route('chemicals.show', $id));
 });
 
 // Edit Chemical

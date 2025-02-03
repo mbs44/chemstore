@@ -106,7 +106,7 @@
 
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
-                        <a href="{{ route('chemicals.show', $chemical) }}" class="bg-blue-500 button-action">View</a>
+                        <a href="{{ route('chemicals.show', $chemical->id) }}" class="bg-blue-500 button-action">View</a>
                         <a href="{{ route('chemicals.edit', $chemical) }}" class="bg-yellow-500 button-action">Edit</a>
                         <form action="{{ route('chemicals.destroy', $chemical) }}" method="POST"
                               style="display:inline;">

@@ -58,13 +58,24 @@
                     <textarea id="description" name="description" rows="4"
                               class="form-input">{{ old('description', $chemical->description) }}</textarea>
                 </div>
+
+                <div class="form-group div-input">
+                    <label class="form-label">Dangerous Properties</label>
+                    @foreach($dangerousProperties as $property)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="dangerous_properties[]" value="{{ $property->id }}" id="property{{ $property->id }}"
+                                {{ in_array($property->id, $selectedProperties) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="property{{ $property->id }}">
+                                {{ $property->name_en }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
             </div>
             <button type="submit" class="button-submit">Update Chemical</button>
             <a href="{{ route('chemicals.index') }}" class="button-cancel">Cancel</a>
 
-
         </form>
-
 
     </div>
 @endsection
