@@ -98,9 +98,8 @@ class ChemicalController extends Controller
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
     }
 
-    public function show( $id=1): View
+    public function show($id): View
     {
-        Log::info('received Id :' . $id);
         $chemical = Chemical::with(['measureUnit', 'dangerousProperties'])->findOrFail($id);
         return view('chemicals.show', compact('chemical'));
     }
