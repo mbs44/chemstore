@@ -45,6 +45,17 @@ class ChemicalController extends Controller
         if ($measureUnitId) {
             $query->where('measure_unit_id', 'like', '%' . $measureUnitId . '%');
         }
+        if ($measureUnitId) {
+            $query->where('measure_unit_id', 'like', '%' . $measureUnitId . '%');
+        }
+
+        if ($request->has('dangerous_properties')) {
+            $selectedProperties = $request->input('dangerous_properties');
+            $query->whereHas('dangerousProperties', function ($query) use ($selectedProperties) {
+                $query->whereIn('dangerous_property_id', $selectedProperties);
+            });
+        } else
+            $selectedProperties = [];
 
         // Get the sort column and direction from the request
         $sortColumn = $request->get('sort', 'chemical_formula'); // Default sort by chemical name
@@ -64,8 +75,11 @@ class ChemicalController extends Controller
         $chemicals = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
         // Fetch all measure units for the filter
         $measureUnits = MeasureUnit::all();
+        $dangerousProperties = DangerousProperty::all();
+
         return view('chemicals.index',
-            compact('chemicals', 'sortColumn', 'sortDirection', 'measureUnits'));
+            compact('chemicals', 'sortColumn',
+                'sortDirection', 'measureUnits', 'dangerousProperties', 'selectedProperties'));
     }
 
     public function create(): View

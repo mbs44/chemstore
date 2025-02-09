@@ -41,4 +41,20 @@ class Chemical extends Model
     {
         return $this->belongsToMany(DangerousProperty::class, 'chemical_dangerous_property');
     }
+
+    public function experiments(): BelongsToMany
+    {
+        return $this->belongsToMany(Experiment::class, 'chemical_experiment');
+    }
+
+    function visualizeChemicalFormula(string $formula): string {
+        // Use a regular expression to find numbers and replace them with subscript HTML
+        $visualizedFormula = preg_replace_callback('/(\d+)/', function($matches) {
+            return '<sub>' . $matches[0] . '</sub>';
+        }, $formula);
+
+        return $visualizedFormula;
+    }
+
+
 }

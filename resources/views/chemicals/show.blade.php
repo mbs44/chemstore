@@ -6,8 +6,9 @@
     <div class="div-container">
         <!-- Render Breadcrumbs -->
         @if($chemical)
-        <h1 class="h1-screen">{{ $chemical->chemical_formula }}</h1>
+        <h1 class="h1-screen">Chemical Details</h1>
         <div class="div-full">
+            <p class="mt-2"><strong>Chemical Formula:</strong> {!!  $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</p>
             <p class="mt-2"><strong>Chemical Name (EN):</strong> {{ $chemical->chemical_name_en }}</p>
             <p class="mt-2"><strong>Chemical Name (SK):</strong> {{ $chemical->chemical_name_sk }}</p>
             <p class="mt-2"><strong>Quantity:</strong> {{ $chemical->quantity }}</p>
@@ -16,7 +17,7 @@
             <p class="mt-2"><strong>Created At:</strong> {{ $chemical->created_at }}</p>
             <p class="mt-2"><strong>Updated At:</strong> {{ $chemical->updated_at }}</p>
 
-            <p class="mt-2">Dangerous Properties</p>
+            <p class="mt-2"><strong>Dangerous Properties</strong></p>
             <ul>
                 @if($chemical->dangerousProperties->isEmpty())
                     <li>No dangerous properties associated with this chemical.</li>
