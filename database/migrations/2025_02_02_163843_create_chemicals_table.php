@@ -17,11 +17,12 @@ return new class extends Migration
             $table->string('chemical_name_sk');
             $table->string('chemical_formula');
             $table->decimal('quantity');
-            $table->unsignedBigInteger('measure_unit_id');
-            $table->text('description')->nullable();
+            $table->foreignId('measure_unit_id')->constrained()->restrictOnDelete();
+            $table->text('description_en')->nullable();
+            $table->text('description_sk')->nullable();
             $table->timestamps();
 
-            $table->foreign('measure_unit_id')->references('id')->on('measure_units')->restrictOnDelete();
+      //      $table->foreign('measure_unit_id')->references('id')->on('measure_units')->restrictOnDelete();
         });
 
     }

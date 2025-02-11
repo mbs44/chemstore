@@ -40,8 +40,12 @@
                     </select>
                 </div>
                 <div class="div-full">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-textarea" id="description" name="Description"></textarea>
+                    <label for="description_en" class="form-label">Description (EN)</label>
+                    <textarea class="form-textarea" id="description_en" name="Description"></textarea>
+                </div>
+                <div class="div-full">
+                    <label for="description_sk" class="form-label">Description (SK)</label>
+                    <textarea class="form-textarea" id="description_sk" name="Description"></textarea>
                 </div>
 
                 <div class="div-full">

@@ -13,7 +13,8 @@
             <p class="mt-2"><strong>Chemical Name (SK):</strong> {{ $chemical->chemical_name_sk }}</p>
             <p class="mt-2"><strong>Quantity:</strong> {{ $chemical->quantity }}</p>
             <p class="mt-2"><strong>Measure Unit:</strong> {{ $chemical->measureUnit->name ?? 'N/A' }}</p> <!-- Assuming we have a relationship defined -->
-            <p class="mt-2"><strong>Description:</strong> {{ $chemical->description }}</p>
+            <p class="mt-2"><strong>Description (EN):</strong> {{ $chemical->description_en }}</p>
+            <p class="mt-2"><strong>Description (SK):</strong> {{ $chemical->description_sk }}</p>
             <p class="mt-2"><strong>Created At:</strong> {{ $chemical->created_at }}</p>
             <p class="mt-2"><strong>Updated At:</strong> {{ $chemical->updated_at }}</p>
 

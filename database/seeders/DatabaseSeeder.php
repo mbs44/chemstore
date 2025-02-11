@@ -16,11 +16,20 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Student User',
+            'email' => 'student@gjh.sk',
+        ]);
+        User::factory()->create([
+            'name' => 'Teacher User',
+            'email' => 'teacher@gjh.sk',
+        ]);
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@gjh.sk',
         ]);
 
         $this->call(MeasureUnitsTableSeeder::class);
         $this->call(DangerousPropertiesTableSeeder::class);
+        $this->call(StateTableSeeder::class);
     }
 }

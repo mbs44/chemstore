@@ -9,16 +9,18 @@ return new class extends Migration
 {
     public function up():void
     {
-        Schema::create('chemical_experiment', function (Blueprint $table) {
+        Schema::create('request_chemical', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chemical_id')->constrained()->onDelete('cascade');
-            $table->foreignId('experiment_id')->constrained()->onDelete('cascade');
+            $table->foreignId('request_id')->constrained()->onDelete('cascade');
+            $table->decimal('quantity');
+            $table->foreignId('measure_unit_id')->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }
 
     public function down():void
     {
-        Schema::dropIfExists('chemical_experiment');
+        Schema::dropIfExists('request_chemical');
     }
 };

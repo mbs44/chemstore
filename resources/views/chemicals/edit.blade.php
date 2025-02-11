@@ -54,9 +54,14 @@
                 </div>
 
                 <div class="div-full">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea id="description" name="description" rows="4"
-                              class="form-input">{{ old('description', $chemical->description) }}</textarea>
+                    <label for="description_en" class="form-label">Description (EN)</label>
+                    <textarea id="description_en" name="description_en" rows="4"
+                              class="form-input">{{ old('description_en', $chemical->description_en) }}</textarea>
+                </div>
+                <div class="div-full">
+                    <label for="description_sk" class="form-label">Description (SK)</label>
+                    <textarea id="description_sk" name="description_sk" rows="4"
+                              class="form-input">{{ old('description_sk', $chemical->description_sk) }}</textarea>
                 </div>
 
                 <div class="div-full">

@@ -17,7 +17,7 @@ use Illuminate\Http\Response;
 class ChemicalController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request) :View
     {
         // Get the filter parameters from the request
         $chemicalNameEn = $request->input('chemical_name_en');
@@ -98,7 +98,8 @@ class ChemicalController extends Controller
             'chemical_formula' => 'required|string|max:255',
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
             'measure_unit_id' => 'required|exists:measure_units,id',
-            'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
+            'description_sk' => 'nullable|string',
             'dangerous_properties' => 'array', // Validate as an array
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
@@ -135,7 +136,8 @@ class ChemicalController extends Controller
             'chemical_formula' => 'required|string|max:255',
             'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
             'measure_unit_id' => 'required|exists:measure_units,id',
-            'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
+            'description_sk' => 'nullable|string',
             'dangerous_properties' => 'array', // Validate as an array
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);

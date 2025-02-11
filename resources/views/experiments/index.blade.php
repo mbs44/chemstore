@@ -10,12 +10,12 @@
         <form action="{{ route('experiments.index') }}" method="GET">
             <div class="div-form">
                 <div class="div-input">
-                    <label for="experiment_name_en" class="form-label">Chemical Name (EN)</label>
+                    <label for="experiment_name_en" class="form-label">Experiment Name (EN)</label>
                     <input type="text" class="form-input" id="experiment_name_en" name="experiment_name_en"
                            value="{{ request()->input('name_en') }}">
                 </div>
                 <div class="div-input">
-                    <label for="experiment_name_sk" class="form-label">Chemical Name (SK)</label>
+                    <label for="experiment_name_sk" class="form-label">Experiment Name (SK)</label>
                     <input type="text" class="form-input" id="experiment_name_sk" name="experiment_name_sk"
                            value="{{ request()->input('name_sk') }}">
                 </div>
