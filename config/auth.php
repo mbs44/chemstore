@@ -1,5 +1,7 @@
 <?php
 
+use App\Ldap\LdapUser;
+
 return [
 
     /*
@@ -42,9 +44,10 @@ return [
         ],
     ],
 
+
     /*
     |--------------------------------------------------------------------------
-    | User Providers
+    | UserCustom Providers
     |--------------------------------------------------------------------------
     |
     | All authentication guards have a user provider, which defines how the
@@ -61,14 +64,9 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'driver' => 'ldap',
+            'model' => LdapUser::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -88,12 +86,12 @@ return [
     | generating more password reset tokens. This prevents the user from
     | quickly generating a very large amount of password reset tokens.
     |
-    */
 
+  */
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+      //      'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
         ],

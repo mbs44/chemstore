@@ -6,8 +6,9 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "davejamesmiller/laravel-breadcrumbs": "^5.3",
+        "php": "^8.3",
+        "diglactic/laravel-breadcrumbs": "^9.0",
+        "directorytree/ldaprecord-laravel": "v3.3.5",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9"
     },

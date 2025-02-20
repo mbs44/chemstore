@@ -1,8 +1,8 @@
 <?php
 
-use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
-
 // Home
+use Diglactic\Breadcrumbs\Breadcrumbs;
+
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
 });

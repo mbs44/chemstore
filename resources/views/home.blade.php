@@ -1,27 +1,29 @@
 <!-- resources/views/home.blade.php -->
 
-@extends('layout')
+<!-- resources/views/home.blade.php -->
 
-@section('content')
-    <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-bold">Welcome to the Chemical Store</h1>
-        <p class="mt-4">Explore our wide range of chemicals for various applications.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Store</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Use Vite helper -->
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Welcome to Our Chemical Storage Application!</h1>
 
-        <div class="mt-6">
-            <h2 class="text-2xl font-semibold">Featured Chemicals</h2>
-            <ul class="mt-2 space-y-2">
-                <li class="bg-white shadow-md rounded-lg p-4">
-                    <h3 class="font-bold">Chemical Name 1</h3>
-                    <p>Short description of Chemical 1.</p>
-                    <a href="{{ route('chemicals.show', 1) }}" class="text-blue-500 hover:underline">View Details</a>
-                </li>
-                <li class="bg-white shadow-md rounded-lg p-4">
-                    <h3 class="font-bold">Chemical Name 2</h3>
-                    <p>Short description of Chemical 2.</p>
-                    <a href="{{ route('chemicals.show', 2) }}" class="text-blue-500 hover:underline">View Details</a>
-                </li>
-                <!-- Add more chemicals as needed -->
-            </ul>
-        </div>
-    </div>
-@endsection
+    @if (Auth::check())
+        <p>Hello, {{ Auth::user()->name }}! You are logged in.</p>
+        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    @else
+        <p>You are not logged in.</p>
+        <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+    @endif
+</div>
+</body>
+</html>
