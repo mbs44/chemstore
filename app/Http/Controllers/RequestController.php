@@ -60,25 +60,23 @@ class RequestController extends Controller
     {
         $request->validate([
             'experiment_id' => 'required|exists:experiments,id',
-            'experiment_date' => 'required|date',
+            'experiment_date' => 'required|date|after:today',
             'note' => 'nullable|string',
             'chemicals' => 'required|array',
-            'chemicals.*.id' => 'required|exists:chemicals,id',
-            'chemicals.*.measure_unit_id' => 'required|exists:measure_units,id',
-            'chemicals.*.quantity' => 'required|numeric|min:0',
+            'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
+            'chemicals.*.quantity' =>  'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
         ]);
 
         $newRequest = RequestModel::create([
             'state_id' => 1, //Initial
-            'requested_by' => $request->user()->id,
+            'requested_by' => $request->user()->id, //TODO: here must be user id from DB
             'experiment_id' => $request->experiment_id,
             'experiment_date' => $request->experiment_date,
             'note' => $request->note
         ]);
 
         foreach ($request->chemicals as $chemical) {
-            $newRequest->chemicals()->attach($chemical['id'], [
-                'measure_unit_id' => $chemical['measure_unit_id'],
+            $newRequest->chemicals()->attach($chemical['chemical_id'], [
                 'quantity' => $chemical['quantity'],
             ]);
         }
@@ -105,13 +103,11 @@ class RequestController extends Controller
     {
         $request->validate([
             'experiment_id' => 'required|exists:experiments,id',
-            'experiment_date' => 'required|date',
-            'requested_by' => 'required|exists:users,id',
+            'experiment_date' => 'required|date|after:today',
             'note' => 'nullable|string',
             'chemicals' => 'required|array',
-            'chemicals.*.id' => 'required|exists:chemicals,id',
-            'chemicals.*.measure_unit_id' => 'required|exists:measure_units,id',
-            'chemicals.*.quantity' => 'required|numeric|min:0',
+            'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
+            'chemicals.*.quantity' =>  'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
         ]);
 
         $requestModel->update([
@@ -123,8 +119,7 @@ class RequestController extends Controller
         // Sync chemicals
         $requestModel->chemicals()->detach();
         foreach ($request->chemicals as $chemical) {
-            $requestModel->chemicals()->attach($chemical['id'], [
-                'measure_unit_id' => $chemical['measure_unit_id'],
+            $requestModel->chemicals()->attach($chemical['chemical_id'], [
                 'quantity' => $chemical['quantity'],
             ]);
         }

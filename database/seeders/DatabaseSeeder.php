@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // UserCustom::factory(10)->create();
 
         $this->call(UsersSeeder::class);
+        $this->call(RolesAndPermissionsSeeder::class);
         $this->call(MeasureUnitsTableSeeder::class);
         $this->call(DangerousPropertiesTableSeeder::class);
         $this->call(StateTableSeeder::class);

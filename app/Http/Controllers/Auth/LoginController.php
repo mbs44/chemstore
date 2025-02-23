@@ -42,7 +42,7 @@ class LoginController extends Controller
 
     public function logout() : RedirectResponse
     {
-        Auth::guard('ldap')->logout();
+        Auth::guard('web')->logout();
         return redirect('/login'); // Redirect to login after logout
     }
 }

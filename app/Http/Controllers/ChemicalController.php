@@ -7,6 +7,7 @@ use App\Models\Chemical; // Make sure to import the Chemical model
 use App\Models\DangerousProperty;
 use App\Models\MeasureUnit;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -84,6 +85,10 @@ class ChemicalController extends Controller
 
     public function create(): View
     {
+        if (!auth()->user()->can('manage_chemicals')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $dangerousProperties = DangerousProperty::all();
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
         return view('chemicals.create', compact('measureUnits', 'dangerousProperties'));
@@ -91,12 +96,15 @@ class ChemicalController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Log::info('This is a test log message.');
+        if (!auth()->user()->can('manage_chemicals')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $request->validate([
             'chemical_name_en' => 'required|string|max:255',
             'chemical_name_sk' => 'required|string|max:255',
             'chemical_formula' => 'required|string|max:255',
-            'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
+            'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
             'measure_unit_id' => 'required|exists:measure_units,id',
             'description_en' => 'nullable|string',
             'description_sk' => 'nullable|string',
@@ -121,6 +129,10 @@ class ChemicalController extends Controller
 
     public function edit(Chemical $chemical): View
     {
+        if (!auth()->user()->can('manage_chemicals')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $dangerousProperties = DangerousProperty::all();
         $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
@@ -130,6 +142,10 @@ class ChemicalController extends Controller
 
     public function update(Request $request, Chemical $chemical): RedirectResponse
     {
+        if (!auth()->user()->can('manage_chemicals')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $request->validate([
             'chemical_name_en' => 'required|string|max:255',
             'chemical_name_sk' => 'required|string|max:255',
@@ -150,6 +166,10 @@ class ChemicalController extends Controller
 
     public function destroy(Chemical $chemical): RedirectResponse
     {
+        if (!auth()->user()->can('manage_chemicals')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $chemical->delete();
         return redirect()->route('chemicals.index')->with('success', 'Chemical deleted successfully.');
     }

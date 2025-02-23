@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chemical;
 use App\Models\Experiment;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -55,6 +56,10 @@ class ExperimentController extends Controller
     // Show the form for creating a new experiment
     public function create(): View
     {
+        if (!auth()->user()->can('manage_experiments')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $chemicals = Chemical::all();
         return view('experiments.create', compact('chemicals'));
     }
@@ -62,6 +67,10 @@ class ExperimentController extends Controller
     // Store a newly created experiment in storage
     public function store(Request $request): RedirectResponse
     {
+        if (!auth()->user()->can('manage_experiments')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_sk' => 'required|string|max:255',
@@ -90,6 +99,10 @@ class ExperimentController extends Controller
     // Show the form for editing the specified experiment
     public function edit(Experiment $experiment): View
     {
+        if (!auth()->user()->can('manage_experiments')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $chemicals = Chemical::all();
         $selectedChemicals = $experiment->chemicals->pluck('id')->toArray();// Find the experiment by ID
         return view('experiments.edit', compact('experiment', 'chemicals', 'selectedChemicals'));
@@ -98,6 +111,10 @@ class ExperimentController extends Controller
     // Update the specified experiment in storage
     public function update(Request $request, Experiment $experiment): RedirectResponse
     {
+        if (!auth()->user()->can('manage_experiments')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
+
         $request->validate([
             'name_en' => 'required|string|max:255',
             'name_sk' => 'required|string|max:255',
@@ -115,8 +132,11 @@ class ExperimentController extends Controller
     // Remove the specified experiment from storage
     public function destroy(Experiment $experiment): RedirectResponse
     {
-        $experiment->delete(); // Delete the experiment
+        if (!auth()->user()->can('manage_experiments')) {
+            throw new AuthorizationException('You do not have permission for this action.');
+        }
 
+        $experiment->delete(); // Delete the experiment
         return redirect()->route('experiments.index')->with('success', 'Experiment deleted successfully.');
     }
 }
