@@ -26,7 +26,7 @@
                 </div>
                 <div class="div-input">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="text" class="form-input" id="quantity" name="quantity" required>
+                    <input type="number" class="form-input" id="quantity" name="quantity" required>
                 </div>
                 <div class="div-input">
                     <label for="measure_unit_id" class="form-label">Measure Unit</label>

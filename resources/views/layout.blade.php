@@ -31,6 +31,8 @@
                     <div class="hidden sm:block sm:ml-6">
                         <div class="flex space-x-4">
                             <a href="{{ route('home') }}" class="text-lg font-bold">Chemical Store</a>
+                            <a href="{{ route('requests.create') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">New Request</a>
+
                             <a href="{{ route('chemicals.index') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Chemicals</a>
                             <a href="{{ route('experiments.index') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Experiments</a>
                             <a href="#" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">About</a>

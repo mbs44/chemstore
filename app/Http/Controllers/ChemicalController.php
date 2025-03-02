@@ -85,7 +85,9 @@ class ChemicalController extends Controller
 
     public function create(): View
     {
-        if (!auth()->user()->can('manage_chemicals')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -96,7 +98,9 @@ class ChemicalController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        if (!auth()->user()->can('manage_chemicals')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -129,7 +133,9 @@ class ChemicalController extends Controller
 
     public function edit(Chemical $chemical): View
     {
-        if (!auth()->user()->can('manage_chemicals')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -142,7 +148,9 @@ class ChemicalController extends Controller
 
     public function update(Request $request, Chemical $chemical): RedirectResponse
     {
-        if (!auth()->user()->can('manage_chemicals')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -166,7 +174,9 @@ class ChemicalController extends Controller
 
     public function destroy(Chemical $chemical): RedirectResponse
     {
-        if (!auth()->user()->can('manage_chemicals')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 

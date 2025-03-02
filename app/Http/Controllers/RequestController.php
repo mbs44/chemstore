@@ -3,12 +3,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Experiment;
 use App\Models\Request as RequestModel; // Rename to avoid conflict with the class name
 use App\Models\Chemical;
 use App\Models\MeasureUnit; // Assuming you have a MeasureUnit model
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class RequestController extends Controller
@@ -52,7 +52,8 @@ class RequestController extends Controller
     {
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
-        return view('requests.create', compact('chemicals', 'measureUnits'));
+        $experiments = Experiment::all();
+        return view('requests.create', compact('chemicals', 'measureUnits', 'experiments'));
     }
 
     // Store a newly created request in storage

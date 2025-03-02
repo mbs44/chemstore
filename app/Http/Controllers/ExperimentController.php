@@ -56,7 +56,9 @@ class ExperimentController extends Controller
     // Show the form for creating a new experiment
     public function create(): View
     {
-        if (!auth()->user()->can('manage_experiments')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -67,7 +69,9 @@ class ExperimentController extends Controller
     // Store a newly created experiment in storage
     public function store(Request $request): RedirectResponse
     {
-        if (!auth()->user()->can('manage_experiments')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -99,7 +103,9 @@ class ExperimentController extends Controller
     // Show the form for editing the specified experiment
     public function edit(Experiment $experiment): View
     {
-        if (!auth()->user()->can('manage_experiments')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -111,7 +117,9 @@ class ExperimentController extends Controller
     // Update the specified experiment in storage
     public function update(Request $request, Experiment $experiment): RedirectResponse
     {
-        if (!auth()->user()->can('manage_experiments')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 
@@ -132,7 +140,9 @@ class ExperimentController extends Controller
     // Remove the specified experiment from storage
     public function destroy(Experiment $experiment): RedirectResponse
     {
-        if (!auth()->user()->can('manage_experiments')) {
+        $userRoles = session('user_roles', []);
+        if (!in_array('admin', $userRoles, true) &&
+            !in_array('teacher', $userRoles, true)) {
             throw new AuthorizationException('You do not have permission for this action.');
         }
 

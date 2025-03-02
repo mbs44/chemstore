@@ -1,8 +1,8 @@
-/* resources/css/app.css */
+@import 'flowbite/dist/flowbite.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 /* public/css/app.css */
 
@@ -45,6 +45,14 @@
 
 .button-submit {
     @apply bg-blue-500 text-white px-4 py-2 rounded;
+}
+
+.button-add-item {
+    @apply bg-green-500 text-white px-4 py-2 rounded;
+}
+
+.button-delete {
+    @apply bg-red-500 text-white px-4 py-2 rounded;
 }
 
 .button-cancel {

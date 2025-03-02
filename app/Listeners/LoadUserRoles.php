@@ -13,21 +13,30 @@ class LoadUserRoles
 
         // Get the authenticated user
         $user = $event->user;
+        $uid = $user->uid[0];
 
-        $dbUser = User::query()->where('username', $user->uid)->first();
+        $dbUser = User::query()->where('username', $uid)->first();
 
         $roles = [];
         if ( $dbUser) {
-            if ($dbUser->isAdmin)
+            if ($dbUser->is_admin)
                 $roles[] = 'admin';
 
-            if ($dbUser->isTeacher)
+            if ($dbUser->is_teacher)
                 $roles[] = 'teacher';
 
-            if ($dbUser->isStudent)
+            if ($dbUser->is_student)
                 $roles[] = 'student';
-        } else
+        } else {
             $roles[] = 'student';
+            User::create([
+                'username' => $uid,
+                'is_admin' => false,
+                'is_teacher' => false,
+                'is_student' => true,
+                'email' => $uid . "@gjh.sk",
+            ]);
+        }
 
         // Optionally, you can assign roles to the session
         session(['user_roles' => $roles]);
