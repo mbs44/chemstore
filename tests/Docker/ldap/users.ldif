@@ -1,0 +1,21 @@
+# Create users for gjh.sk domain
+dn: uid=student,dc=gjh,dc=sk
+objectClass: inetOrgPerson
+cn: Student
+sn: User
+uid: student
+userPassword: Student123
+
+dn: uid=teacher,dc=gjh,dc=sk
+objectClass: inetOrgPerson
+cn: Teacher
+sn: User
+uid: teacher
+userPassword: Teacher123
+
+dn: uid=oravec,dc=gjh,dc=sk
+objectClass: inetOrgPerson
+cn: Oravec
+sn: User
+uid: oravec
+userPassword: Oravec123

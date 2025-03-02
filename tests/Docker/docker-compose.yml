@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  apache:
+    image: php:8.3-apache
+    container_name: apache
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - lamp-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: chemlab
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - lamp-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: user
+      PMA_PASSWORD: user123
+    ports:
+      - "8081:80"
+    networks:
+      - lamp-network
+
+  ldap:
+    image: osixia/openldap:1.5.0
+    container_name: ldap_server
+    environment:
+      LDAP_ORGANISATION: "GJH"
+      LDAP_DOMAIN: "gjh.sk"
+      LDAP_ADMIN_PASSWORD: "Admin123"  # Change this to a secure password
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "Readonly123"  # Change this to a secure password
+    ports:
+      - "389:389"  # LDAP
+      - "636:636"  # LDAPS
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+
+volumes:
+  ldap_data:
+  ldap_config:
+  mysql-data:
+
+networks:
+  lamp-network:
