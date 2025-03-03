@@ -4,17 +4,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Experiment;
-use App\Models\Request as RequestModel; // Rename to avoid conflict with the class name
+use App\Models\Request as RequestModel;
+
+// Rename to avoid conflict with the class name
 use App\Models\Chemical;
-use App\Models\MeasureUnit; // Assuming you have a MeasureUnit model
+use App\Models\MeasureUnit;
+
+// Assuming you have a MeasureUnit model
+use App\Models\User;
+use DateTime;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RequestController extends Controller
 {
     // Display a listing of the requests with search functionality
-    public function index(HttpRequest $request):View
+    public function index(HttpRequest $request): View
     {
         $searchTerm = $request->input('search');
         $chemicalId = $request->input('chemical_id');
@@ -48,7 +58,7 @@ class RequestController extends Controller
     }
 
     // Show the form for creating a new request
-    public function create():View
+    public function create(): View
     {
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
@@ -65,38 +75,71 @@ class RequestController extends Controller
             'note' => 'nullable|string',
             'chemicals' => 'required|array',
             'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
-            'chemicals.*.quantity' =>  'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
+            'chemicals.*.quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
         ]);
 
-        $newRequest = RequestModel::create([
-            'state_id' => 1, //Initial
-            'requested_by' => $request->user()->id, //TODO: here must be user id from DB
-            'experiment_id' => $request->experiment_id,
-            'experiment_date' => $request->experiment_date,
-            'note' => $request->note
-        ]);
+        $dbUser = User::query()->where('username', $request->user()->uid)->first();
 
-        foreach ($request->chemicals as $chemical) {
-            $newRequest->chemicals()->attach($chemical['chemical_id'], [
-                'quantity' => $chemical['quantity'],
-            ]);
+
+// Input date in dd.mm.yyyy format
+        $dateString = $request->experiment_date;
+
+// Create a DateTime object from the given format
+        $dateTime = DateTime::createFromFormat('d.m.Y', $dateString);
+
+// Check if the date was created successfully
+        if ($dateTime) {
+            // Format the date to ISO format (yyyy-mm-dd)
+            $isoDate = $dateTime->format('Y-m-d');
+        } else {
+            return back()->withErrors(['message' => 'Invalid date format.'], 400);
         }
+        // Start a database transaction
 
-        return redirect()->route('requests.index')->with('success', 'Request created successfully.');
+        DB::beginTransaction();
+
+        try {
+            $newRequest = RequestModel::create([
+                'state_id' => 1, //Initial
+                'requested_by' => $dbUser->id, //TODO: here must be user id from DB
+                'experiment_id' => $request->experiment_id,
+                'experiment_date' => $isoDate,
+                'note' => $request->note
+            ]);
+
+            foreach ($request->chemicals as $chemical) {
+                $dbChemical = Chemical::query()->find($chemical['chemical_id']);
+                $newRequest->chemicals()->attach($chemical['chemical_id'], [
+                    'quantity' => $chemical['quantity'],
+                    'measure_unit_id' => $dbChemical['measure_unit_id'],
+                ]);
+            }
+            // Commit the transaction
+
+            DB::commit();
+            return redirect()->route('requests.index')->with('success', 'Request created successfully.');
+        } catch (Exception $e) {
+
+            // Rollback the transaction if something failed
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to create request: ' . $e->getMessage()], 500);
+
+        }
     }
 
     // Display the specified request
-    public function show(RequestModel $request):View
+    public function show(RequestModel $request): View
     {
         return view('requests.show', compact('request'));
     }
 
     // Show the form for editing the specified request
-    public function edit(RequestModel $request):View
+    public function edit(RequestModel $request): View
     {
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
-        return view('requests.edit', compact('request', 'chemicals', 'measureUnits'));
+        $experiments = Experiment::all();
+        return view('requests.edit', compact('request', 'chemicals', 'measureUnits', 'experiments'));
     }
 
     // Update the specified request in storage
@@ -108,24 +151,49 @@ class RequestController extends Controller
             'note' => 'nullable|string',
             'chemicals' => 'required|array',
             'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
-            'chemicals.*.quantity' =>  'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
+            'chemicals.*.quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
         ]);
+        // Input date in dd.mm.yyyy format
+        $dateString = $request->experiment_date;
 
-        $requestModel->update([
-            'experiment_id' => $request->experiment_id,
-            'experiment_date' => $request->experiment_date,
-            'note' => $request->note,
-        ]);
+// Create a DateTime object from the given format
+        $dateTime = DateTime::createFromFormat('d.m.Y', $dateString);
 
-        // Sync chemicals
-        $requestModel->chemicals()->detach();
-        foreach ($request->chemicals as $chemical) {
-            $requestModel->chemicals()->attach($chemical['chemical_id'], [
-                'quantity' => $chemical['quantity'],
-            ]);
+// Check if the date was created successfully
+        if ($dateTime) {
+            // Format the date to ISO format (yyyy-mm-dd)
+            $isoDate = $dateTime->format('Y-m-d');
+        } else {
+            return back()->withErrors(['message' => 'Invalid date format.'], 400);
         }
 
-        return redirect()->route('requests.index')->with('success', 'Request updated successfully.');
+        DB::beginTransaction();
+
+        try {
+            $requestModel->update([
+                'experiment_id' => $request->experiment_id,
+                'experiment_date' => $isoDate,
+                'note' => $request->note,
+            ]);
+
+            // Sync chemicals
+            $requestModel->chemicals()->detach();
+            foreach ($request->chemicals as $chemical) {
+                $dbChemical = Chemical::query()->find($chemical['chemical_id']);
+                $requestModel->chemicals()->attach($chemical['chemical_id'], [
+                    'quantity' => $chemical['quantity'],
+                    'measure_unit_id' => $dbChemical['measure_unit_id'],
+                ]);
+            }
+            DB::commit();
+            return redirect()->route('requests.index')->with('success', 'Request updated successfully.');
+        } catch (Exception $e) {
+
+            // Rollback the transaction if something failed
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to create request: ' . $e->getMessage()], 500);
+
+        }
     }
 
     // Remove the specified request from storage

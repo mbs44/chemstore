@@ -18,7 +18,7 @@ class Request extends Model
     // Define the fillable attributes
     protected $fillable = [
         'experiment_id',
-        'status_id',
+        'state_id',
         'requested_by',
         'resolved_by',
         'experiment_date',
@@ -34,9 +34,9 @@ class Request extends Model
         return $this->belongsTo(Experiment::class);
     }
 
-    public function status():BelongsTo
+    public function state():BelongsTo
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(State::class);
     }
 
     public function requestedBy():BelongsTo

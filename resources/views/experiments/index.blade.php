@@ -57,8 +57,8 @@
             <tbody>
             @foreach($experiments as $experiment)
                 <tr>
-                    <td class="py-2 px-4 border-b">{{ $experiment->name_en }}</td>
-                    <td class="py-2 px-4 border-b">{{ $experiment->name_sk }}</td>
+                    <td class="table-col">{{ $experiment->name_en }}</td>
+                    <td class="table-col">{{ $experiment->name_sk }}</td>
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
                         <a href="{{ route('experiments.show', $experiment->id) }}" class="bg-blue-500 button-action">View</a>
