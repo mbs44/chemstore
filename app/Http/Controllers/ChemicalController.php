@@ -35,19 +35,16 @@ class ChemicalController extends Controller
             $query->where('chemical_name_en', 'like', '%' . $chemicalNameEn . '%');
         }
         if ($chemicalNameSk) {
-            $query->where('chemical_name_sk', 'like', '%' . $chemicalNameEn . '%');
+            $query->where('chemical_name_sk', 'like', '%' . $chemicalNameSk . '%');
         }
         if ($chemicalFormula) {
             $query->where('chemical_formula', 'like', '%' . $chemicalFormula . '%');
         }
-        if ($quantity) {
+        if ($quantity) { //TODO: replace with availability  high, low, none
             $query->where('quantity', $quantity);
         }
         if ($measureUnitId) {
-            $query->where('measure_unit_id', 'like', '%' . $measureUnitId . '%');
-        }
-        if ($measureUnitId) {
-            $query->where('measure_unit_id', 'like', '%' . $measureUnitId . '%');
+            $query->where('measure_unit_id',  $measureUnitId);
         }
 
         if ($request->has('dangerous_properties')) {
@@ -78,31 +75,30 @@ class ChemicalController extends Controller
         $measureUnits = MeasureUnit::all();
         $dangerousProperties = DangerousProperty::all();
 
+        $allowEdit = $this->checkRoles([ 'admin', 'teacher']);
         return view('chemicals.index',
             compact('chemicals', 'sortColumn',
-                'sortDirection', 'measureUnits', 'dangerousProperties', 'selectedProperties'));
+                'sortDirection', 'measureUnits', 'dangerousProperties', 'selectedProperties', 'allowEdit'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function create(): View
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
         return view('chemicals.create', compact('measureUnits', 'dangerousProperties'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(Request $request): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $request->validate([
             'chemical_name_en' => 'required|string|max:255',
@@ -131,13 +127,12 @@ class ChemicalController extends Controller
         return view('chemicals.show', compact('chemical'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function edit(Chemical $chemical): View
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
         $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
@@ -146,13 +141,12 @@ class ChemicalController extends Controller
             'chemical', 'measureUnits', 'dangerousProperties', 'selectedProperties'));
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(Request $request, Chemical $chemical): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $request->validate([
             'chemical_name_en' => 'required|string|max:255',
@@ -172,13 +166,12 @@ class ChemicalController extends Controller
         return redirect()->route('chemicals.index')->with('success', 'Chemical updated successfully.');
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Chemical $chemical): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $chemical->delete();
         return redirect()->route('chemicals.index')->with('success', 'Chemical deleted successfully.');

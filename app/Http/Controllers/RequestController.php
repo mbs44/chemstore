@@ -11,6 +11,7 @@ use App\Models\Chemical;
 use App\Models\MeasureUnit;
 
 // Assuming you have a MeasureUnit model
+use App\Models\State;
 use App\Models\User;
 use DateTime;
 use Exception;
@@ -26,35 +27,69 @@ class RequestController extends Controller
     // Display a listing of the requests with search functionality
     public function index(HttpRequest $request): View
     {
-        $searchTerm = $request->input('search');
-        $chemicalId = $request->input('chemical_id');
+        // Get the filter parameters from the request
+        $stateId = $request->input('state_id');
+        $requestedBy = $request->input('requested_by');
+        $experimentId = $request->input('experiment_id');
+        $experimentDateFrom = $request->input('experiment_date_from');
+        $experimentDateTo = $request->input('experiment_date_to');
 
-        $query = RequestModel::with('chemicals', 'requestedBy', 'resolvedBy');
+        // Start the query
+        $query = RequestModel::query();
 
-        if ($searchTerm) {
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('experiment_date', 'like', "%{$searchTerm}%")
-                    ->orWhere('note', 'like', "%{$searchTerm}%")
-                    ->orWhere('reject_reason', 'like', "%{$searchTerm}%")
-                    ->orWhereHas('requestedBy', function ($q) use ($searchTerm) {
-                        $q->where('name', 'like', "%{$searchTerm}%");
-                    })
-                    ->orWhereHas('resolvedBy', function ($q) use ($searchTerm) {
-                        $q->where('name', 'like', "%{$searchTerm}%");
-                    });
-            });
+        // Apply the filter parameters to the database query
+        if ($stateId) {
+            $query->where('state_id', $stateId);
         }
 
-        if ($chemicalId) {
-            $query->whereHas('chemicals', function ($q) use ($chemicalId) {
-                $q->where('chemical_id', $chemicalId);
+        if ($requestedBy) {
+            $query->whereHas('requestedBy', function ($query) use ($requestedBy) {
+                $query->where('username', 'like', '%' . $requestedBy . '%');
             });
+
         }
 
-        $requests = $query->paginate(10);
-        $chemicals = Chemical::all();
+        // Check if the date was created successfully
 
-        return view('requests.index', compact('requests', 'chemicals', 'searchTerm', 'chemicalId'));
+        // Format the date to ISO format (yyyy-mm-dd)
+
+        if ($experimentDateFrom) {
+            $dateTime = DateTime::createFromFormat('d.m.Y', $experimentDateFrom);
+            $isoDate = $dateTime->format('Y-m-d');
+            $query->where('experiment_date', '>',  $isoDate );
+        }
+
+        if ($experimentDateTo) {
+            $dateTime = DateTime::createFromFormat('d.m.Y', $experimentDateTo);
+            $isoDate = $dateTime->format('Y-m-d');
+            $query->where('experiment_date', '<',  $isoDate );
+        }
+
+        if ($experimentId) {
+            $query->where('experiment_id', $experimentId);
+        }
+
+        // Get the sort column and direction from the request
+        $sortColumn = $request->get('sort', 'experiment_date'); // Default sort by chemical name
+        $sortDirection = $request->get('direction', 'asc'); // Default direction
+
+        // Validate the sort column and direction
+        $validColumns = ['experiment_date', 'requested_by', 'state_id', 'experiment_id',
+            'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $validColumns)) {
+            $sortColumn = 'experiment_date';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'asc';
+        }
+
+        // Retrieve chemicals with sorting and pagination
+        $requests = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
+        $experiments = Experiment::all();
+        $states = State::all();
+
+        return view('requests.index', compact('requests', 'experiments', 'states',
+            'sortColumn', 'sortDirection'));
     }
 
     // Show the form for creating a new request
@@ -63,7 +98,9 @@ class RequestController extends Controller
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
         $experiments = Experiment::all();
-        return view('requests.create', compact('chemicals', 'measureUnits', 'experiments'));
+
+        return view('requests.create', compact('chemicals',
+            'measureUnits', 'experiments'));
     }
 
     // Store a newly created request in storage
@@ -128,9 +165,15 @@ class RequestController extends Controller
     }
 
     // Display the specified request
-    public function show(RequestModel $request): View
+    public function show($id): View
     {
-        return view('requests.show', compact('request'));
+        $request = RequestModel::with([ 'chemicals'])->findOrFail($id);
+        $chemicals = Chemical::all();
+        $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
+        $experiments = Experiment::all();
+        $states = State::all();
+        return view('requests.show', compact('request',
+        'chemicals', 'measureUnits', 'experiments', 'states'));
     }
 
     // Show the form for editing the specified request

@@ -41,7 +41,9 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="button-submit">Filter</button>
+                <div class="div-full">
+                    <button type="submit" class="button-submit">Filter</button>
+                </div>
             </div>
 
         </form>
@@ -62,6 +64,7 @@
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
                         <a href="{{ route('experiments.show', $experiment->id) }}" class="bg-blue-500 button-action">View</a>
+                        @if ( $allowEdit )
                         <a href="{{ route('experiments.edit', $experiment) }}"
                            class="bg-yellow-500 button-action">Edit</a>
                         <form action="{{ route('experiments.destroy', $experiment) }}" method="POST"
@@ -70,6 +73,7 @@
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 button-action">Delete</button>
                         </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -79,8 +83,8 @@
         <div class="mt-4">
             {{ $experiments->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>
-
+        @if ( $allowEdit )
         <a href="{{ route('experiments.create') }}" class="button-submit">Add New Experiment</a>
-
+        @endif
     </div>
 @endsection

@@ -4,87 +4,94 @@
 
 @section('content')
     <div class="div-container">
-        <h1 class="h1-screen">Update Chemical</h1>
+        <h1 class="h1-screen">Update Request for Chemicals</h1>
 
-        <form action="{{ route('chemicals.update', $chemical->id) }}" method="POST">
+        <form action="{{ route('requests.update', $request->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="div-form">
-                <div class="div-input">
-                    <label for="chemical_name_en" class="form-label">Chemical Name
-                        (EN)</label>
-                    <input type="text" id="chemical_name_en" name="chemical_name_en"
-                           value="{{ old('chemical_name_en', $chemical->chemical_name_en) }}"
-                           class="form-input" required>
-                </div>
 
                 <div class="div-input">
-                    <label for="chemical_name_sk" class="form-label">Chemical Name
-                        (SK)</label>
-                    <input type="text" id="chemical_name_sk" name="chemical_name_sk"
-                           value="{{ old('chemical_name_sk', $chemical->chemical_name_sk) }}"
-                           class="form-input" required>
-                </div>
-
-                <div class="div-input">
-                    <label for="chemical_formula" class="form-label">Chemical
-                        Formula</label>
-                    <input type="text" id="chemical_formula" name="chemical_formula"
-                           value="{{ old('chemical_formula', $chemical->chemical_formula) }}"
-                           class="form-input" required>
-                </div>
-
-                <div class="div-input">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" id="quantity" name="quantity"
-                           value="{{ old('quantity', $chemical->quantity) }}"
-                           class="form-input" required>
-                </div>
-
-                <div class="div-input">
-                    <label for="measure_unit_id" class="form-label">Measure Unit</label>
-                    <select id="measure_unit_id" name="measure_unit_id" class="form-input" required>
-                        <option value="">Measure unit</option>
-                        @foreach ($measureUnits as $unit)
-                            <option value="{{ $unit->id }}" {{ (old('measure_unit_id', $chemical->measure_unit_id) == $unit->id) ? 'selected' : '' }}>
-                                {{ $unit->name }}
+                    <label for="experiment_id" class="form-label">Experiment</label>
+                    <select id="experiment_id" name="experiment_id" class="form-input" required>
+                        <option value="">Select an experiment</option>
+                        @foreach ($experiments as $item)
+                            <option value="{{ $item->id }}" {{ old('experiment_id', $request->experiment_id) == $item->id ? 'selected' : '' }}>
+                                {{ $item->name_en }}
                             </option>
                         @endforeach
+
                     </select>
                 </div>
 
-                <div class="div-full">
-                    <label for="description_en" class="form-label">Description (EN)</label>
-                    <textarea id="description_en" name="description_en" rows="4"
-                              class="form-input">{{ old('description_en', $chemical->description_en) }}</textarea>
-                </div>
-                <div class="div-full">
-                    <label for="description_sk" class="form-label">Description (SK)</label>
-                    <textarea id="description_sk" name="description_sk" rows="4"
-                              class="form-input">{{ old('description_sk', $chemical->description_sk) }}</textarea>
+                <div class="div-input">
+                    <label for="experiment_date" class="form-label">Experiment Date</label>
+                    <div class="relative max-w-sm">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                            </svg>
+                        </div>
+                        <input id="experiment_date" name="experiment_date" required datepicker datepicker-format="dd.mm.yyyy" datepicker-autohide type="text"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                               placeholder="Select date" value="{{ old('experiment_date',  $request->localDate($request->experiment_date)) }}">
+                    </div>
                 </div>
 
                 <div class="div-full">
-                    <label for="dangerous_properties" class="form-label">Dangerous Properties:</label>
-
-                    <!-- Select -->
-                    <select id="dangerous_properties" name="dangerous_properties[]" multiple="" data-hs-select='{
-  "placeholder": "Select property ...",
-  "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
-  "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
-  "mode": "tags",
-  "wrapperClasses": "relative ps-0.5 pe-9 min-h-[46px] flex items-center flex-wrap text-nowrap w-full border border-gray-200 rounded-lg text-start text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400",
-  "tagsItemTemplate": "<div class=\"flex flex-nowrap items-center relative z-10 bg-white border border-gray-200 rounded-full p-1 m-1 dark:bg-neutral-900 dark:border-neutral-700 \"><div class=\"whitespace-nowrap text-gray-800 dark:text-neutral-200 \" data-title></div><div class=\"inline-flex shrink-0 justify-center items-center size-5 ms-2 rounded-full text-gray-800 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm dark:bg-neutral-700/50 dark:hover:bg-neutral-700 dark:text-neutral-400 cursor-pointer\" data-remove><svg class=\"shrink-0 size-3\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></div></div>",
-  "tagsInputId": "hs-tags-input",
-  "tagsInputClasses": "py-3 px-2 rounded-lg order-1 text-sm outline-none dark:bg-neutral-900 dark:placeholder-neutral-500 dark:text-neutral-400",
-  "optionTemplate": "<div class=\"flex items-center\"><div><div class=\"text-sm font-semibold text-gray-800 dark:text-neutral-200 \" data-title></div><div class=\"text-xs text-gray-500 dark:text-neutral-500 \" data-description></div></div><div class=\"ms-auto\"><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-blue-600\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z\"/></svg></span></div></div>",
-  "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-}' class="hidden">
-                        @foreach($dangerousProperties as $property)
-                            <option {{ in_array($property->id, $selectedProperties) ? 'selected=""' : '' }}
-                                value="{{ $property->id }}">{{ $property->name_en }}</option>
+                    <h2 class="text-lg font-semibold mb-2">Chemical List</h2>
+                    <table class="min-w-full border-collapse border border-gray-200">
+                        <thead>
+                        <tr>
+                            <th class="table-col">Chemical</th>
+                            <th class="table-col">Quantity</th>
+                            <th class="table-col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="chemicals">
+                        @foreach($request->chemicals as $chemical)
+                        <tr class="chemical-entry">
+                            <td class="table-cell">
+                                <select name="chemicals[{{$loop->index }}][chemical_id]"
+                                        class="form-input"
+                                        required>
+                                    <option value="{{ $chemical->id }}">Select a chemical</option>
+                                    @foreach($chemicals as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ old('chemicals[' . $loop->index . '][chemical_id]' , $chemical->id) == $item->id ? 'selected' : '' }}
+                                        >{{ $item->chemical_name_en }} ({{ $item->chemical_formula }}) </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td class="table-cell">
+                                <input type="number" name="chemicals[{{$loop->index }}][quantity]"
+                                       value="{{ old('chemicals[' . $loop->index . '][quantity]', $chemical->pivot->quantity )}}"
+                                       class="form-input" required>
+                            </td>
+                            <td class="table-cell">
+                                @if ( $loop->index > 0)
+                                    <button type="button" class="delete-chemical text-red-500 hover:underline">Delete</button>
+                                @else
+                                    <button type="button" class="delete-chemical text-gray-500">No action</button>
+                                @endif
+                            </td>
+                        </tr>
                         @endforeach
-                    </select>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="div-full">
+                    <button type="button" id="add-chemical"
+                            class="button-add-item">
+                        Add Another Chemical
+                    </button>
+                </div>
+                <div class="div-full">
+                    <label for="note" class="form-label">Note</label>
+                    <textarea class="form-textarea" id="note"
+                              name="Note">{{ old('note', $request->note) }}</textarea>
                 </div>
 
             </div>
@@ -94,4 +101,50 @@
         </form>
 
     </div>
+
+    <script>
+        document.getElementById('add-chemical').addEventListener('click', function() {
+            const chemicalsTable = document.getElementById('chemicals');
+            const chemicalCount = chemicalsTable.getElementsByClassName('chemical-entry').length;
+
+            const newChemicalEntry = document.createElement('tr');
+            newChemicalEntry.classList.add('chemical-entry');
+
+            newChemicalEntry.innerHTML = `
+            <td class="table-cell">
+                <select name="chemicals[${chemicalCount}][chemical_id]"
+                        class="form-input"
+                        required>
+                    <option value="">Select a chemical</option>
+                    @foreach($chemicals as $chemical)
+            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }})</option>
+                    @endforeach
+            </select>
+        </td>
+        <td class="table-cell">
+            <input type="number" name="chemicals[${chemicalCount}][quantity]"
+                       class="form-input"
+                       required>
+            </td>
+            <td class="table-cell">
+                <button type="button" class="delete-chemical text-red-500 hover:underline">Delete</button>
+            </td>
+        `;
+
+            chemicalsTable.appendChild(newChemicalEntry);
+
+            // Add event listener for the delete button
+            newChemicalEntry.querySelector('.delete-chemical').addEventListener('click', function() {
+                chemicalsTable.removeChild(newChemicalEntry);
+            });
+        });
+
+        // Add event listener for the initial delete button
+        document.querySelectorAll('.delete-chemical').forEach(button => {
+            button.addEventListener('click', function() {
+                const chemicalEntry = button.closest('.chemical-entry');
+                chemicalsTable.removeChild(chemicalEntry);
+            });
+        });
+    </script>
 @endsection

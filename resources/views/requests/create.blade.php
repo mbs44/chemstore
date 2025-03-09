@@ -53,9 +53,6 @@
                                         class="form-input"
                                         required>
                                     <option value="">Select a chemical</option>
-                                    @foreach($chemicals as $chemical)
-                                        <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }}) </option>
-                                    @endforeach
                                 </select>
                             </td>
                             <td class="table-cell">
@@ -76,7 +73,7 @@
                 </div>
                 <div class="div-full">
                     <label for="note" class="form-label">Note</label>
-                    <textarea class="form-textarea" id="note" name="Note"></textarea>
+                    <textarea class="form-textarea" id="note" name="note"></textarea>
                 </div>
 
             </div>

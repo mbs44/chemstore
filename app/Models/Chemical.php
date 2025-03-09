@@ -56,6 +56,4 @@ class Chemical extends Model
 
         return $visualizedFormula;
     }
-
-
 }

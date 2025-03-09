@@ -49,18 +49,20 @@ class ExperimentController extends Controller
         // Retrieve chemicals with sorting and pagination
         $experiments = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
         $chemicals = Chemical::all();
+        $allowEdit = $this->checkRoles([ 'admin', 'teacher']);
         return view('experiments.index',
-            compact('experiments', 'sortColumn', 'sortDirection', 'chemicals', 'selectedChemicals'));
+            compact('experiments', 'sortColumn', 'sortDirection',
+                'chemicals', 'selectedChemicals', 'allowEdit'));
     }
 
     // Show the form for creating a new experiment
+
+    /**
+     * @throws AuthorizationException
+     */
     public function create(): View
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $chemicals = Chemical::all();
         return view('experiments.create', compact('chemicals'));
@@ -101,13 +103,13 @@ class ExperimentController extends Controller
     }
 
     // Show the form for editing the specified experiment
+
+    /**
+     * @throws AuthorizationException
+     */
     public function edit(Experiment $experiment): View
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $chemicals = Chemical::all();
         $selectedChemicals = $experiment->chemicals->pluck('id')->toArray();// Find the experiment by ID
@@ -115,13 +117,13 @@ class ExperimentController extends Controller
     }
 
     // Update the specified experiment in storage
+
+    /**
+     * @throws AuthorizationException
+     */
     public function update(Request $request, Experiment $experiment): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $request->validate([
             'name_en' => 'required|string|max:255',
@@ -138,13 +140,13 @@ class ExperimentController extends Controller
     }
 
     // Remove the specified experiment from storage
+
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Experiment $experiment): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $experiment->delete(); // Delete the experiment
         return redirect()->route('experiments.index')->with('success', 'Experiment deleted successfully.');

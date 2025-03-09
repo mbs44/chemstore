@@ -64,7 +64,9 @@
                     </select>
                 </div>
 
-                <button type="submit" class="button-submit">Filter</button>
+                <div class="div-full">
+                    <button type="submit" class="button-submit">Filter</button>
+                </div>
             </div>
 
         </form>
@@ -125,13 +127,14 @@
                 <tr>
                     <td class="table-cell text-left">{{ $chemical->chemical_name_en }}</td>
                     <td class="table-cell text-left">{{ $chemical->chemical_name_sk }}</td>
-                    <td class="table-cell text-left">{{ $chemical->chemical_formula }}</td>
+                    <td class="table-cell text-left">{!! $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</td>
                     <td class="table-cell text-right">{{ $chemical->quantity }}</td>
                     <td class="table-cell text-left">{{ $chemical->measureUnit->name ?? 'N/A' }}</td>
 
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
                         <a href="{{ route('chemicals.show', $chemical->id) }}" class="bg-blue-500 button-action">View</a>
+                        @if ( $allowEdit )
                         <a href="{{ route('chemicals.edit', $chemical) }}" class="bg-yellow-500 button-action">Edit</a>
                         <form action="{{ route('chemicals.destroy', $chemical) }}" method="POST"
                               style="display:inline;">
@@ -139,6 +142,7 @@
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 button-action">Delete</button>
                         </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -149,19 +153,8 @@
             {{ $chemicals->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>
 
-        <a href="{{ route('chemicals.create') }}" class="button-submit">Add New Chemical</a>
-
+        @if ( $allowEdit )
+            <a href="{{ route('chemicals.create') }}" class="button-submit">Add New Chemical</a>
+        @endif
     </div>
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-

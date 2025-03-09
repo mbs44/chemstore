@@ -4,6 +4,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,7 +53,21 @@ class Request extends Model
     public function chemicals()
     {
         return $this->belongsToMany(Chemical::class, 'request_chemical')
-            ->withPivot('measure_unit_id', 'quantity')
+            ->withPivot('chemical_id', 'quantity')
             ->withTimestamps();
+    }
+
+    /**
+     * @throws \DateMalformedStringException
+     */
+    public function localDate(?string $isoDate):string
+    {
+        if ($isoDate) {
+
+            $dateTime = new DateTime($isoDate);
+            return $dateTime->format('d.m.Y');
+        } else {
+            return 'None';
+        }
     }
 }

@@ -8,7 +8,7 @@
         @if($chemical)
         <h1 class="h1-screen">Chemical Details</h1>
         <div class="div-full">
-            <p class="mt-2"><strong>Chemical Formula:</strong> {!!  $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</p>
+            <p class="mt-2"><strong>Chemical Formulae:</strong> {!!  $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</p>
             <p class="mt-2"><strong>Chemical Name (EN):</strong> {{ $chemical->chemical_name_en }}</p>
             <p class="mt-2"><strong>Chemical Name (SK):</strong> {{ $chemical->chemical_name_sk }}</p>
             <p class="mt-2"><strong>Quantity:</strong> {{ $chemical->quantity }}</p>
