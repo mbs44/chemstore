@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="div-container">
-        <h1 class="h1-screen">Update Request for Chemicals</h1>
+        <h1 class="h1-screen">Request for Chemicals</h1>
 
         <form action="{{ route('requests.update', $request->id) }}" method="POST">
             @csrf
@@ -61,7 +61,7 @@
                                     @foreach($chemicals as $item)
                                         <option value="{{ $item->id }}"
                                             {{ old('chemicals[' . $loop->index . '][chemical_id]' , $chemical->id) == $item->id ? 'selected' : '' }}
-                                        >{{ $item->chemical_name_en }} ({{ $item->chemical_formula }}) </option>
+                                        >{{ $item->chemical_name_en }} ({{ $item->chemical_formula }}) in {{ $item->measureUnit->name }}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -91,12 +91,21 @@
                 <div class="div-full">
                     <label for="note" class="form-label">Note</label>
                     <textarea class="form-textarea" id="note"
-                              name="Note">{{ old('note', $request->note) }}</textarea>
+                              name="note">{{ old('note', $request->note) }}</textarea>
                 </div>
+                @if ( $allowApproval )
+                <div class="div-full">
+                    <label for="teacher_note" class="form-label">Teacher Note</label>
+                    <textarea class="form-textarea" id="teacher_note"
+                              name="teacher_note">{{ old('teacher_note', $request->teacher_note) }}</textarea>
+                </div>
+                @endif
 
             </div>
-            <button type="submit" class="button-submit">Update Chemical</button>
-            <a href="{{ route('chemicals.index') }}" class="button-cancel">Cancel</a>
+            @if ( $allowApproval || $request->state_id == 1 )
+                <button type="submit" class="button-submit">Update Request</button>
+            @endif
+            <a href="{{ route('requests.index') }}" class="button-cancel">Close</a>
 
         </form>
 
@@ -117,7 +126,7 @@
                         required>
                     <option value="">Select a chemical</option>
                     @foreach($chemicals as $chemical)
-            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }})</option>
+            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }}) in {{ $chemical->measureUnit->name }}</option>
                     @endforeach
             </select>
         </td>

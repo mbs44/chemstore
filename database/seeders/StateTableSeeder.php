@@ -15,8 +15,7 @@ class StateTableSeeder extends Seeder
             ['name_sk' => 'Zadaná', 'name_en' => 'Initial' ],
             ['name_sk' => 'Zrušená', 'name_en' => 'Cancelled' ],
             ['name_sk' => 'Potvrdená', 'name_en' => 'Approved' ],
-            ['name_sk' => 'Vydaná', 'name_en' => 'Processed' ],
-            ['name_sk' => 'Zamietnutá', 'name_en' => 'Rejected' ]
+            ['name_sk' => 'Vydaná', 'name_en' => 'Processed' ]
         ]);
     }
 }

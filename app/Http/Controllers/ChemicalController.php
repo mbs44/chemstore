@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Chemical; // Make sure to import the Chemical model
 use App\Models\DangerousProperty;
 use App\Models\MeasureUnit;
+use App\Models\Supplies;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class ChemicalController extends Controller
         $chemicalNameEn = $request->input('chemical_name_en');
         $chemicalNameSk = $request->input('chemical_name_sk');
         $chemicalFormula = $request->input('chemical_formula');
-        $quantity = $request->input('quantity');
+        $supplies_id = $request->input('supplies_id');
         $measureUnitId = $request->input('measure_unit_id');
 
         // Start the query
@@ -40,8 +41,8 @@ class ChemicalController extends Controller
         if ($chemicalFormula) {
             $query->where('chemical_formula', 'like', '%' . $chemicalFormula . '%');
         }
-        if ($quantity) { //TODO: replace with availability  high, low, none
-            $query->where('quantity', $quantity);
+        if ($supplies_id) { //TODO: replace with availability  high, low, empty
+            $query->where('supplies_id', $supplies_id);
         }
         if ($measureUnitId) {
             $query->where('measure_unit_id',  $measureUnitId);
@@ -61,7 +62,7 @@ class ChemicalController extends Controller
 
         // Validate the sort column and direction
         $validColumns = ['chemical_formula', 'chemical_name_en', 'chemical_name_sk',
-            'quantity', 'measure_unit_id', 'created_at', 'updated_at'];
+            'supplies_id', 'measure_unit_id', 'created_at', 'updated_at'];
         if (!in_array($sortColumn, $validColumns)) {
             $sortColumn = 'chemical_formula';
         }
@@ -73,12 +74,14 @@ class ChemicalController extends Controller
         $chemicals = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
         // Fetch all measure units for the filter
         $measureUnits = MeasureUnit::all();
+        $supplies = Supplies::all();
         $dangerousProperties = DangerousProperty::all();
 
         $allowEdit = $this->checkRoles([ 'admin', 'teacher']);
         return view('chemicals.index',
             compact('chemicals', 'sortColumn',
-                'sortDirection', 'measureUnits', 'dangerousProperties', 'selectedProperties', 'allowEdit'));
+                'sortDirection', 'measureUnits', 'dangerousProperties', 'supplies',
+                'selectedProperties', 'allowEdit'));
     }
 
     /**
@@ -89,8 +92,10 @@ class ChemicalController extends Controller
         $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
+        $supplies = Supplies::all();
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
-        return view('chemicals.create', compact('measureUnits', 'dangerousProperties'));
+        return view('chemicals.create', compact('measureUnits', 'supplies',
+            'dangerousProperties'));
     }
 
     /**
@@ -104,7 +109,7 @@ class ChemicalController extends Controller
             'chemical_name_en' => 'required|string|max:255',
             'chemical_name_sk' => 'required|string|max:255',
             'chemical_formula' => 'required|string|max:255',
-            'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
+            'supplies_id' =>  'required|exists:supplies,id',
             'measure_unit_id' => 'required|exists:measure_units,id',
             'description_en' => 'nullable|string',
             'description_sk' => 'nullable|string',
@@ -123,7 +128,7 @@ class ChemicalController extends Controller
 
     public function show($id): View
     {
-        $chemical = Chemical::with(['measureUnit', 'dangerousProperties'])->findOrFail($id);
+        $chemical = Chemical::with(['measureUnit', 'supplies', 'dangerousProperties'])->findOrFail($id);
         return view('chemicals.show', compact('chemical'));
     }
 
@@ -135,10 +140,12 @@ class ChemicalController extends Controller
         $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
+        $supplies = Supplies::all();
         $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
         return view('chemicals.edit', compact(
-            'chemical', 'measureUnits', 'dangerousProperties', 'selectedProperties'));
+            'chemical', 'measureUnits', 'supplies',
+            'dangerousProperties', 'selectedProperties'));
     }
 
     /**
@@ -152,7 +159,7 @@ class ChemicalController extends Controller
             'chemical_name_en' => 'required|string|max:255',
             'chemical_name_sk' => 'required|string|max:255',
             'chemical_formula' => 'required|string|max:255',
-            'quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/',
+            'supplies_id' =>  'required|exists:supplies,id',
             'measure_unit_id' => 'required|exists:measure_units,id',
             'description_en' => 'nullable|string',
             'description_sk' => 'nullable|string',

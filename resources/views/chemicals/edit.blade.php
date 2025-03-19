@@ -35,10 +35,15 @@
                 </div>
 
                 <div class="div-input">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" id="quantity" name="quantity"
-                           value="{{ old('quantity', $chemical->quantity) }}"
-                           class="form-input" required>
+                    <label for="supplies_id" class="form-label">Measure Unit</label>
+                    <select id="supplies_id" name="supplies_id" class="form-input" required>
+                        <option value="">Select a Supplies level</option>
+                        @foreach ($supplies as $item)
+                            <option value="{{ $item->id }}" {{ (old('supplies_id', $chemical->supplies_id) == $item->id) ? 'selected' : '' }}>
+                                {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="div-input">

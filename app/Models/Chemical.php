@@ -23,7 +23,7 @@ class Chemical extends Model
         'chemical_name_sk',
         'chemical_name_en',
         'chemical_formula',
-        'quantity',
+        'supplies_id',
         'measure_unit_id',
         'description_sk',
         'description_en',
@@ -36,6 +36,11 @@ class Chemical extends Model
     public function measureUnit() : BelongsTo
     {
         return $this->belongsTo(MeasureUnit::class, 'measure_unit_id');
+    }
+
+    public function supplies() : BelongsTo
+    {
+        return $this->belongsTo(Supplies::class, 'supplies_id');
     }
 
     public function dangerousProperties() : BelongsToMany

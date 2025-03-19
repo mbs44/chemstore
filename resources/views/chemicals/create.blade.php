@@ -25,8 +25,15 @@
                            name="chemical_formula" required>
                 </div>
                 <div class="div-input">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-input" id="quantity" name="quantity" required>
+                    <label for="supplies_id" class="form-label">Supplies</label>
+                    <select id="supplies_id" name="supplies_id" class="form-input" required>
+                        <option value="">Select a supplies level</option>
+                        @foreach ($supplies as $item)
+                            <option value="{{ $item->id }}" {{ old('supplies_id') == $item->id ? 'selected' : '' }}>
+                                {{ $item->name_en }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="div-input">
                     <label for="measure_unit_id" class="form-label">Measure Unit</label>

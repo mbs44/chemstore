@@ -1,6 +1,6 @@
 <?php
 
-// app/Models/Request.php
+// app/Models/StudentRequest.php
 
 namespace App\Models;
 
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Request extends Model
+class StudentRequest extends Model
 {
     use HasFactory;
 
@@ -25,7 +25,7 @@ class Request extends Model
         'experiment_date',
         'resolved_date',
         'note',
-        'reject_reason',
+        'teacher_note',
     ];
 
     // Define relationships

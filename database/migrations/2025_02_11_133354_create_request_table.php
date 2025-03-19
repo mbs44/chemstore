@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('experiment_date');
             $table->date('resolved_date')->nullable();
             $table->text('note')->nullable();
-            $table->text('reject_reason')->nullable();
+            $table->text('teacher_note')->nullable();
             $table->timestamps();
         });
     }

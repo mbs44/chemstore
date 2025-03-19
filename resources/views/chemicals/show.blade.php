@@ -11,7 +11,7 @@
             <p class="mt-2"><strong>Chemical Formulae:</strong> {!!  $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</p>
             <p class="mt-2"><strong>Chemical Name (EN):</strong> {{ $chemical->chemical_name_en }}</p>
             <p class="mt-2"><strong>Chemical Name (SK):</strong> {{ $chemical->chemical_name_sk }}</p>
-            <p class="mt-2"><strong>Quantity:</strong> {{ $chemical->quantity }}</p>
+            <p class="mt-2"><strong>Supplies:</strong> {{ $chemical->supplies->name_en }}</p>
             <p class="mt-2"><strong>Measure Unit:</strong> {{ $chemical->measureUnit->name ?? 'N/A' }}</p> <!-- Assuming we have a relationship defined -->
             <p class="mt-2"><strong>Description (EN):</strong> {{ $chemical->description_en }}</p>
             <p class="mt-2"><strong>Description (SK):</strong> {{ $chemical->description_sk }}</p>

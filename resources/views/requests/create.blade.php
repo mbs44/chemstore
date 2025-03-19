@@ -53,6 +53,9 @@
                                         class="form-input"
                                         required>
                                     <option value="">Select a chemical</option>
+                                    @foreach($chemicals as $chemical)
+                                        <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }}) in {{ $chemical->measureUnit->name }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td class="table-cell">
@@ -78,7 +81,7 @@
 
             </div>
             <button type="submit" class="button-submit">Add Request</button>
-            <a href="{{ route('requests.index') }}" class="button-cancel">Cancel</a>
+            <a href="{{ route('requests.index') }}" class="button-cancel">Close</a>
 
         </form>
     </div>
@@ -98,7 +101,7 @@
                         required>
                     <option value="">Select a chemical</option>
                     @foreach($chemicals as $chemical)
-            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }})</option>
+            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }}) in {{ $chemical->measureUnit->name }}</option>
                     @endforeach
             </select>
         </td>

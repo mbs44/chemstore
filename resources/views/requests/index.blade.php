@@ -4,17 +4,22 @@
 
 @section('content')
     <div class="div-container">
-        <h1 class="h1-screen">Search Requests</h1>
+        @if ( $allowApproval )
+            <h1 class="h1-screen">Search Requests</h1>
+        @else
+            <h1 class="h1-screen">Search My Requests</h1>
+        @endif
 
         <!-- Filter Form -->
         <form action="{{ route('requests.index') }}" method="GET">
             <div class="div-form">
+                @if ( $allowApproval )
                 <div class="div-input">
                     <label for="requested_by" class="form-label">Requested By</label>
                     <input type="text" class="form-input" id="requested_by" name="requested_by"
                            value="{{ request()->input('requested_by') }}">
                 </div>
-
+                @endif
                 <div class="div-input">
                     <label for="state_id" class="form-label">State</label>
                     <select id="state_id" name="state_id" class="form-input">
@@ -133,13 +138,43 @@
                     <td class="table-cell">
                         <!-- You can add more action links here, like Edit or Delete -->
                         <a href="{{ route('requests.show', $request->id) }}" class="bg-blue-500 button-action">View</a>
-                        <a href="{{ route('requests.edit', $request) }}" class="bg-yellow-500 button-action">Edit</a>
-                        <form action="{{ route('requests.destroy', $request) }}" method="POST"
-                              style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 button-action">Delete</button>
-                        </form>
+                        @if ( $request->state_id == 1 || $allowApproval )
+                            <a href="{{ route('requests.edit', $request) }}" class="bg-yellow-500 button-action">Edit</a>
+                        @endif
+                        @if ( $allowApproval )
+                            @if ( $request->state_id == 1 || $request->state_id == 2 ) <!-- initial -->
+                                <form action="{{ route('request.approve') }}" method="POST"
+                                      style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $request->id }}">
+                                    <button type="submit" class="bg-green-700 button-action">Approve</button>
+                                </form>
+                            @endif
+                            @if ( $request->state_id == 3 )  <!-- approved -->
+                                <form action="{{ route('request.process') }}" method="POST"
+                                      style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $request->id }}">
+                                    <button type="submit" class="bg-blue-500 button-action">Process</button>
+                                </form>
+                            @endif
+                            @if ( $request->state_id == 3 || $request->state_id == 1 || $request->state_id == 4) <!-- approved or initial -->
+                                <form action="{{ route('request.cancel') }}" method="POST"
+                                      style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $request->id }}">
+                                    <button type="submit" class="bg-red-500 button-action">Cancel</button>
+                                </form>
+                            @endif
+                        @endif
+                        @if ( $request->state_id == 2 )  <!-- initial -->
+                            <form action="{{ route('requests.destroy', $request) }}" method="POST"
+                                  style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 button-action">Delete</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

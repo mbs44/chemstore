@@ -4,7 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Experiment;
-use App\Models\Request as RequestModel;
+use App\Models\StudentRequest;
 
 // Rename to avoid conflict with the class name
 use App\Models\Chemical;
@@ -35,18 +35,26 @@ class RequestController extends Controller
         $experimentDateTo = $request->input('experiment_date_to');
 
         // Start the query
-        $query = RequestModel::query();
+        $query = StudentRequest::query();
 
         // Apply the filter parameters to the database query
         if ($stateId) {
             $query->where('state_id', $stateId);
         }
 
-        if ($requestedBy) {
-            $query->whereHas('requestedBy', function ($query) use ($requestedBy) {
-                $query->where('username', 'like', '%' . $requestedBy . '%');
-            });
 
+        $allowApproval = $this->checkRoles([ 'admin', 'teacher']);
+
+        if ( $allowApproval) {
+            if ($requestedBy) {
+                $query->whereHas('requestedBy', function ($query) use ($requestedBy) {
+                    $query->where('username', 'like', '%' . $requestedBy . '%');
+                });
+
+            }
+        } else {
+            $dbUser = User::query()->where('username', $request->user()->uid)->first();
+            $query->where('requested_by',$dbUser->id );
         }
 
         // Check if the date was created successfully
@@ -88,8 +96,9 @@ class RequestController extends Controller
         $experiments = Experiment::all();
         $states = State::all();
 
+
         return view('requests.index', compact('requests', 'experiments', 'states',
-            'sortColumn', 'sortDirection'));
+            'sortColumn', 'sortDirection', 'allowApproval'));
     }
 
     // Show the form for creating a new request
@@ -136,7 +145,7 @@ class RequestController extends Controller
         DB::beginTransaction();
 
         try {
-            $newRequest = RequestModel::create([
+            $newRequest = StudentRequest::create([
                 'state_id' => 1, //Initial
                 'requested_by' => $dbUser->id, //TODO: here must be user id from DB
                 'experiment_id' => $request->experiment_id,
@@ -154,7 +163,7 @@ class RequestController extends Controller
             // Commit the transaction
 
             DB::commit();
-            return redirect()->route('requests.index')->with('success', 'Request created successfully.');
+            return redirect()->route('requests.index')->with('success', 'StudentRequest created successfully.');
         } catch (Exception $e) {
 
             // Rollback the transaction if something failed
@@ -167,31 +176,48 @@ class RequestController extends Controller
     // Display the specified request
     public function show($id): View
     {
-        $request = RequestModel::with([ 'chemicals'])->findOrFail($id);
+        $request = StudentRequest::with([ 'chemicals'])->findOrFail($id);
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
         $experiments = Experiment::all();
         $states = State::all();
+        $allowApproval = $this->checkRoles([ 'admin', 'teacher']);
         return view('requests.show', compact('request',
-        'chemicals', 'measureUnits', 'experiments', 'states'));
+        'chemicals', 'measureUnits', 'experiments', 'states', 'allowApproval'));
     }
 
     // Show the form for editing the specified request
-    public function edit(RequestModel $request): View
+    public function edit(StudentRequest $request): View
     {
         $chemicals = Chemical::all();
         $measureUnits = MeasureUnit::all(); // Assuming you have a MeasureUnit model
         $experiments = Experiment::all();
-        return view('requests.edit', compact('request', 'chemicals', 'measureUnits', 'experiments'));
+
+        $allowApproval = $this->checkRoles([ 'admin', 'teacher']);
+        return view('requests.edit', compact('request', 'chemicals',
+            'measureUnits', 'experiments', 'allowApproval'));
     }
 
     // Update the specified request in storage
-    public function update(HttpRequest $request, RequestModel $requestModel): RedirectResponse
+    public function update(HttpRequest $request, $id): RedirectResponse
     {
+        $studentRequest = StudentRequest::with([ 'chemicals'])->findOrFail($id);
+        $allowApproval = $this->checkRoles([ 'admin', 'teacher']);
+
+        if ( !$allowApproval) {
+            $dbUser = User::query()->where('username', $request->user()->uid)->first();
+            if ( $studentRequest->state_id != 1 ||
+                $request->teacher_note ||
+                $dbUser->id != $studentRequest->requestedBy) {
+                throw new AuthorizationException('You do not have permission for this action.');
+            }
+        }
+
         $request->validate([
             'experiment_id' => 'required|exists:experiments,id',
             'experiment_date' => 'required|date|after:today',
             'note' => 'nullable|string',
+            'teacher_note' => 'nullable|string',
             'chemicals' => 'required|array',
             'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
             'chemicals.*.quantity' => 'required|regex:/^\d{1,8}(\.\d{1,2})?$/|min:0',
@@ -213,25 +239,25 @@ class RequestController extends Controller
         DB::beginTransaction();
 
         try {
-            $requestModel->update([
+            $studentRequest->update([
                 'experiment_id' => $request->experiment_id,
                 'experiment_date' => $isoDate,
                 'note' => $request->note,
+                'teacher_note' => $request->teacher_note,
             ]);
 
             // Sync chemicals
-            $requestModel->chemicals()->detach();
+            $studentRequest->chemicals()->detach();
             foreach ($request->chemicals as $chemical) {
                 $dbChemical = Chemical::query()->find($chemical['chemical_id']);
-                $requestModel->chemicals()->attach($chemical['chemical_id'], [
+                $studentRequest->chemicals()->attach($chemical['chemical_id'], [
                     'quantity' => $chemical['quantity'],
                     'measure_unit_id' => $dbChemical['measure_unit_id'],
                 ]);
             }
             DB::commit();
-            return redirect()->route('requests.index')->with('success', 'Request updated successfully.');
+            return redirect()->route('requests.index')->with('success', 'StudentRequest updated successfully.');
         } catch (Exception $e) {
-
             // Rollback the transaction if something failed
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to create request: ' . $e->getMessage()], 500);
@@ -240,9 +266,18 @@ class RequestController extends Controller
     }
 
     // Remove the specified request from storage
-    public function destroy(RequestModel $requestModel): RedirectResponse
+    public function destroy(StudentRequest $requestModel): RedirectResponse
     {
         $requestModel->delete();
-        return redirect()->route('requests.index')->with('success', 'Request deleted successfully.');
+        return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
+    }
+
+    // Remove the specified request from storage
+    public function approve(StudentRequest $requestModel): RedirectResponse
+    {
+        $requestModel->update([
+            'state_id' => 'approved',
+        ]);
+        return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
     }
 }

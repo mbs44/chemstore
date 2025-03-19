@@ -58,7 +58,7 @@ Breadcrumbs::for('experiments.edit', function ($trail, $experiment) {
 // Experiments
 Breadcrumbs::for('requests.index', function ($trail) {
     $trail->parent('home');
-    $trail->push('Request', route('requests.index'));
+    $trail->push('StudentRequest', route('requests.index'));
 });
 
 Breadcrumbs::for('requests.create', function ($trail) {

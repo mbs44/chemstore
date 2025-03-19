@@ -48,20 +48,20 @@
 
         </form>
 
-        <table class="min-w-full bg-white border border-gray-300">
+        <table class="table-result">
             <thead>
             <tr>
-                <th class="py-2 px-4 border-b">Name (EN)</th>
-                <th class="py-2 px-4 border-b">Name (SK)</th>
-                <th class="py-2 px-4 border-b">Actions</th>
+                <th class="table-col">Name (EN)</th>
+                <th class="table-col">Name (SK)</th>
+                <th class="table-col">Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($experiments as $experiment)
                 <tr>
-                    <td class="table-col">{{ $experiment->name_en }}</td>
-                    <td class="table-col">{{ $experiment->name_sk }}</td>
-                    <td class="table-cell">
+                    <td class="table-cell text-left">{{ $experiment->name_en }}</td>
+                    <td class="table-cell text-left">{{ $experiment->name_sk }}</td>
+                    <td class="table-cell text-left">
                         <!-- You can add more action links here, like Edit or Delete -->
                         <a href="{{ route('experiments.show', $experiment->id) }}" class="bg-blue-500 button-action">View</a>
                         @if ( $allowEdit )

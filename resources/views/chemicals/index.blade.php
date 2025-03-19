@@ -25,10 +25,17 @@
                            value="{{ request()->input('chemical_formula') }}">
                 </div>
                 <div class="div-input">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-input" id="quantity" name="quantity"
-                           value="{{ request()->input('quantity') }}">
+                    <label for="supplies_id" class="form-label">Supplies</label>
+                    <select id="supplies_id" name="supplies_id" class="form-input">
+                        <option value="">Select a supplies level</option>
+                        @foreach ($supplies as $item)
+                            <option value="{{ $item->id }}" {{ request()->input('supplies_id') == $item->id ? 'selected' : '' }}>
+                                {{ $item->name_en }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
+
                 <div class="div-input">
                     <label for="measure_unit_id" class="form-label">Measure Unit</label>
                     <select id="measure_unit_id" name="measure_unit_id" class="form-input">
@@ -102,10 +109,10 @@
                     </a>
                 </th>
                 <th class="table-col">
-                    <a href="{{ route('chemicals.index', ['sort' => 'quantity', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
+                    <a href="{{ route('chemicals.index', ['sort' => 'supplies_id', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
                        class="table-sort">
-                        Quantity
-                        @if ($sortColumn === 'quantity')
+                        Supplies
+                        @if ($sortColumn === 'supplies_id')
                             <span class="text-xs">{{ $sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         @endif
                     </a>
@@ -128,7 +135,7 @@
                     <td class="table-cell text-left">{{ $chemical->chemical_name_en }}</td>
                     <td class="table-cell text-left">{{ $chemical->chemical_name_sk }}</td>
                     <td class="table-cell text-left">{!! $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</td>
-                    <td class="table-cell text-right">{{ $chemical->quantity }}</td>
+                    <td class="table-cell text-left">{{ $chemical->supplies->name_en }}</td>
                     <td class="table-cell text-left">{{ $chemical->measureUnit->name ?? 'N/A' }}</td>
 
                     <td class="table-cell">
