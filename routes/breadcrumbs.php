@@ -77,3 +77,15 @@ Breadcrumbs::for('requests.edit', function ($trail, $request) {
     $trail->parent('requests.index');
     $trail->push('Edit', route('requests.edit', $request->id));
 });
+
+// Experiments
+Breadcrumbs::for('users.index', function ($trail) {
+    $trail->parent('home');
+    $trail->push('StudentRequest', route('users.index'));
+});
+
+Breadcrumbs::for('users.edit', function ($trail, $request) {
+    $trail->parent('users.index');
+    $trail->push('Edit', route('users.edit', $request->id));
+});
+

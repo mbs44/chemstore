@@ -40,7 +40,7 @@
                         <option value="">Select a Supplies level</option>
                         @foreach ($supplies as $item)
                             <option value="{{ $item->id }}" {{ (old('supplies_id', $chemical->supplies_id) == $item->id) ? 'selected' : '' }}>
-                                {{ $item->name }}
+                                {{ $item->name_en }} / {{ $item->name_sk }}
                             </option>
                         @endforeach
                     </select>

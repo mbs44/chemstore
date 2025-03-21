@@ -43,6 +43,10 @@
     @apply text-3xl font-bold mb-4;
 }
 
+.h2-screen {
+    @apply text-2xl font-bold mb-4;
+}
+
 .button-submit {
     @apply bg-blue-500 text-white px-4 py-2 rounded;
 }
@@ -79,5 +83,15 @@
     @apply text-white px-2 py-1 rounded;
 }
 
+#carouselHome {
+    max-width: 100%; /* Adjust as needed */
+    margin: auto; /* Center the carousel */
+}
 
+#carouselHome img {
+    width: auto; /* Maintain the original width */
+    height: auto; /* Maintain the original height */
+    max-width: 100%; /* Ensure it doesn't overflow */
+    max-height: 100%; /* Ensure it doesn't overflow */
+}
 

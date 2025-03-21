@@ -35,6 +35,10 @@
 
                             <a href="{{ route('chemicals.index') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Chemicals</a>
                             <a href="{{ route('experiments.index') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Experiments</a>
+
+                            @if ( App\Http\Controllers\UserController::isAdmin() )
+                                <a href="{{ route('users.index') }}" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Users</a>
+                            @endif
                             <a href="#" class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">About</a>
 
                             <form action="{{ route('logout') }}" method="POST" style="display: inline;">

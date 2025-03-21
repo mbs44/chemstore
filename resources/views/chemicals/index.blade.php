@@ -20,7 +20,7 @@
                            value="{{ request()->input('chemical_name_sk') }}">
                 </div>
                 <div class="div-input">
-                    <label for="chemical_formula" class="form-label">Chemical Formula</label>
+                    <label for="chemical_formula" class="form-label">Chemical Formulae</label>
                     <input type="text" class="form-input" id="chemical_formula" name="chemical_formula"
                            value="{{ request()->input('chemical_formula') }}">
                 </div>
@@ -66,7 +66,7 @@
 }' class="hidden">
                         @foreach($dangerousProperties as $property)
                             <option {{ in_array($property->id, $selectedProperties) ? 'selected=""' : '' }}
-                                    value="{{ $property->id }}">{{ $property->name_en }}</option>
+                                    value="{{ $property->id }}">{{ $property->name_en }} / {{ $property->name_sk }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -93,7 +93,7 @@
                 <th class="table-col">
                     <a href="{{ route('chemicals.index', ['sort' => 'chemical_name_sk', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
                        class="table-sort">
-                        Chemical Name (EN)
+                        Chemical Name (SK)
                         @if ($sortColumn === 'chemical_name_sk')
                             <span class="text-xs">{{ $sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         @endif
@@ -102,7 +102,7 @@
                 <th class="table-col">
                     <a href="{{ route('chemicals.index', ['sort' => 'chemical_formula', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
                        class="table-sort">
-                        Chemical Formula
+                        Chemical Formulae
                         @if ($sortColumn === 'chemical_formula')
                             <span class="text-xs">{{ $sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         @endif
@@ -135,7 +135,7 @@
                     <td class="table-cell text-left">{{ $chemical->chemical_name_en }}</td>
                     <td class="table-cell text-left">{{ $chemical->chemical_name_sk }}</td>
                     <td class="table-cell text-left">{!! $chemical->visualizeChemicalFormula($chemical->chemical_formula) !!}</td>
-                    <td class="table-cell text-left">{{ $chemical->supplies->name_en }}</td>
+                    <td class="table-cell text-left">{{ $chemical->supplies->name_en }} / {{ $chemical->supplies->name_sk }}</td>
                     <td class="table-cell text-left">{{ $chemical->measureUnit->name ?? 'N/A' }}</td>
 
                     <td class="table-cell">

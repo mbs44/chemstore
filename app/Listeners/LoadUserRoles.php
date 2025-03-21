@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Authenticated;
 
 class LoadUserRoles
@@ -38,6 +39,8 @@ class LoadUserRoles
             ]);
         }
 
+        if ( !$roles)
+            throw new AuthorizationException('You do not have permission for this application.');
         // Optionally, you can assign roles to the session
         session(['user_roles' => $roles]);
     }

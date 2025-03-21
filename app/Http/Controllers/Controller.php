@@ -6,6 +6,14 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 abstract class Controller
 {
+    protected static function userInRole ( string $role  ) : bool {
+        $userRoles = session('user_roles', []);
+
+        if (in_array($role, $userRoles, true))
+            return true;
+
+        return false;
+    }
 
     protected function checkRoles ( array $roles  ) : bool {
         $userRoles = session('user_roles', []);

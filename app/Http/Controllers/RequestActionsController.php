@@ -28,6 +28,7 @@ class RequestActionsController extends Controller
     // Remove the specified request from storage
     public function approve(HttpRequest $request): RedirectResponse
     {
+        $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:requests,id', // Example validation
         ]);
@@ -46,6 +47,7 @@ class RequestActionsController extends Controller
     // Remove the specified request from storage
     public function cancel(HttpRequest $request): RedirectResponse
     {
+        $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:requests,id', // Example validation
         ]);
@@ -63,6 +65,7 @@ class RequestActionsController extends Controller
     // Remove the specified request from storage
     public function process(HttpRequest $request): RedirectResponse
     {
+        $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:requests,id', // Example validation
         ]);

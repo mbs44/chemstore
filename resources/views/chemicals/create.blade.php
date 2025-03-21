@@ -20,7 +20,7 @@
                            name="chemical_name_sk" required>
                 </div>
                 <div class="div-input">
-                    <label for="chemical_formula" class="form-label">Formula</label>
+                    <label for="chemical_formula" class="form-label">Chemical Formulae</label>
                     <input type="text" class="form-input" id="chemical_formula"
                            name="chemical_formula" required>
                 </div>
@@ -30,7 +30,7 @@
                         <option value="">Select a supplies level</option>
                         @foreach ($supplies as $item)
                             <option value="{{ $item->id }}" {{ old('supplies_id') == $item->id ? 'selected' : '' }}>
-                                {{ $item->name_en }}
+                                {{ $item->name_en }} / {{ $item->name_sk }}
                             </option>
                         @endforeach
                     </select>
