@@ -17,9 +17,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UsersSeeder::class);
         $this->call(RolesAndPermissionsSeeder::class);
-        $this->call(MeasureUnitsTableSeeder::class);
-        $this->call(DangerousPropertiesTableSeeder::class);
         $this->call(SuppliesTableSeeder::class);
+        $this->call(ChemicalsTableSeeder::class);
         $this->call(StateTableSeeder::class);
     }
 }

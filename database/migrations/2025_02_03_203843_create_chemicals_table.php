@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('chemicals', function (Blueprint $table) {
             $table->id();
+            $table->string('chemical_formula');
             $table->string('chemical_name_en');
             $table->string('chemical_name_sk');
-            $table->string('chemical_formula');
+            $table->string('disposal_en');
+            $table->string('disposal_sk');
+            $table->string('access_en');
+            $table->string('access_sk');
             $table->foreignId('supplies_id')->constrained()->restrictOnDelete();;
             $table->foreignId('measure_unit_id')->constrained()->restrictOnDelete();
             $table->text('description_en')->nullable();

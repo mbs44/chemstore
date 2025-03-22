@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Chemical; // Make sure to import the Chemical model
 use App\Models\DangerousProperty;
 use App\Models\MeasureUnit;
+use App\Models\SafetyItem;
 use App\Models\Supplies;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -92,10 +93,11 @@ class ChemicalController extends Controller
         $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
+        $safetyItems = SafetyItem::all();
         $supplies = Supplies::all();
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
         return view('chemicals.create', compact('measureUnits', 'supplies',
-            'dangerousProperties'));
+            'dangerousProperties', 'safetyItems'));
     }
 
     /**
@@ -111,8 +113,14 @@ class ChemicalController extends Controller
             'chemical_formula' => 'required|string|max:255',
             'supplies_id' =>  'required|exists:supplies,id',
             'measure_unit_id' => 'required|exists:measure_units,id',
+            'disposal_en' => 'required|string|max:255',
+            'disposal_sk' => 'required|string|max:255',
+            'access_en' => 'required|string|max:255',
+            'access_sk' => 'required|string|max:255',
             'description_en' => 'nullable|string',
             'description_sk' => 'nullable|string',
+            'safety_items' => 'array', // Validate as an array
+            'safety_items.*' => 'exists:safety_items,id', // Validate each ID exists
             'dangerous_properties' => 'array', // Validate as an array
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
@@ -121,6 +129,10 @@ class ChemicalController extends Controller
 
         if ($request->has('dangerous_properties')) {
             $chemical->dangerousProperties()->attach($request->dangerous_properties);
+        }
+
+        if ($request->has('safety_items')) {
+            $chemical->safetyItems()->attach($request->safety_items);
         }
 
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
@@ -140,12 +152,14 @@ class ChemicalController extends Controller
         $this->assertRoles( [ 'admin', 'teacher']);
 
         $dangerousProperties = DangerousProperty::all();
+        $safetyItems = SafetyItem::all();
         $supplies = Supplies::all();
+        $selectedItems = $chemical->safetyItems->pluck('id')->toArray();
         $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
         $measureUnits = MeasureUnit::all(); // Fetch all measure units
         return view('chemicals.edit', compact(
-            'chemical', 'measureUnits', 'supplies',
-            'dangerousProperties', 'selectedProperties'));
+            'chemical', 'measureUnits', 'supplies', 'safetyItems',
+            'dangerousProperties', 'selectedProperties', 'selectedItems'));
     }
 
     /**
@@ -161,14 +175,21 @@ class ChemicalController extends Controller
             'chemical_formula' => 'required|string|max:255',
             'supplies_id' =>  'required|exists:supplies,id',
             'measure_unit_id' => 'required|exists:measure_units,id',
+            'disposal_en' => 'required|string|max:255',
+            'disposal_sk' => 'required|string|max:255',
+            'access_en' => 'required|string|max:255',
+            'access_sk' => 'required|string|max:255',
             'description_en' => 'nullable|string',
             'description_sk' => 'nullable|string',
+            'safety_items' => 'array', // Validate as an array
+            'safety_items.*' => 'exists:safety_items,id', // Validate each ID exists
             'dangerous_properties' => 'array', // Validate as an array
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
 
         $chemical->update($request->all());
         $chemical->dangerousProperties()->sync($request->dangerous_properties);
+        $chemical->safetyItems()->sync($request->safety_items);
 
         return redirect()->route('chemicals.index')->with('success', 'Chemical updated successfully.');
     }

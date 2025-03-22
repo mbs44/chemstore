@@ -10,12 +10,12 @@
         <form action="{{ route('chemicals.index') }}" method="GET">
             <div class="div-form">
                 <div class="div-input">
-                    <label for="chemical_name_en" class="form-label">Chemical Name (EN)</label>
+                    <label for="chemical_name_en" class="form-label">Name (EN)</label>
                     <input type="text" class="form-input" id="chemical_name_en" name="chemical_name_en"
                            value="{{ request()->input('chemical_name_en') }}">
                 </div>
                 <div class="div-input">
-                    <label for="chemical_name_sk" class="form-label">Chemical Name (SK)</label>
+                    <label for="chemical_name_sk" class="form-label">Name (SK)</label>
                     <input type="text" class="form-input" id="chemical_name_sk" name="chemical_name_sk"
                            value="{{ request()->input('chemical_name_sk') }}">
                 </div>
@@ -84,7 +84,7 @@
                 <th class="table-col">
                     <a href="{{ route('chemicals.index', ['sort' => 'chemical_name_en', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
                        class="table-sort">
-                        Chemical Name (EN)
+                        Name (EN)
                         @if ($sortColumn === 'chemical_name_en')
                             <span class="text-xs">{{ $sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         @endif
@@ -93,7 +93,7 @@
                 <th class="table-col">
                     <a href="{{ route('chemicals.index', ['sort' => 'chemical_name_sk', 'direction' => $sortDirection === 'asc' ? 'desc' : 'asc']) }}"
                        class="table-sort">
-                        Chemical Name (SK)
+                        Name (SK)
                         @if ($sortColumn === 'chemical_name_sk')
                             <span class="text-xs">{{ $sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         @endif

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dangerous_properties', function (Blueprint $table) {
+        Schema::create('safety_items', function (Blueprint $table) {
             $table->id();
-            $table->string('code'); // Name of the dangerous property
             $table->string('name_en'); // Name of the dangerous property
             $table->string('name_sk'); // Name of the dangerous property
-            $table->text('description_en')->nullable(); // Description of the property
-            $table->text('description_sk')->nullable(); // Description of the property
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dangerous_properties');
+        Schema::dropIfExists('safety_items');
     }
 };

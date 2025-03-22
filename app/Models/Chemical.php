@@ -23,6 +23,8 @@ class Chemical extends Model
         'chemical_name_sk',
         'chemical_name_en',
         'chemical_formula',
+
+
         'supplies_id',
         'measure_unit_id',
         'description_sk',
@@ -46,6 +48,11 @@ class Chemical extends Model
     public function dangerousProperties() : BelongsToMany
     {
         return $this->belongsToMany(DangerousProperty::class, 'chemical_dangerous_property');
+    }
+
+    public function safetyItems() : BelongsToMany
+    {
+        return $this->belongsToMany(SafetyItem::class, 'chemical_safety_item');
     }
 
     public function experiments() : BelongsToMany

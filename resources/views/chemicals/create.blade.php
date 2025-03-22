@@ -10,12 +10,12 @@
             @csrf
             <div class="div-form">
                 <div class="div-input">
-                    <label for="chemical_name_en" class="form-label">Name English</label>
+                    <label for="chemical_name_en" class="form-label">Name (EN)</label>
                     <input type="text" class="form-input" id="chemical_name_en"
                            name="chemical_name_en" required>
                 </div>
                 <div class="div-input">
-                    <label for="chemical_name_sk" class="form-label">Name Slovak</label>
+                    <label for="chemical_name_sk" class="form-label">Name (SK)</label>
                     <input type="text" class="form-input" id="chemical_name_sk"
                            name="chemical_name_sk" required>
                 </div>
@@ -46,6 +46,29 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="div-full">
+                    <label for="disposal_en" class="form-label">Disposal (EN)</label>
+                    <input type="text" class="form-input" id="disposal_en"
+                           name="disposal_en" required>
+                </div>
+                <div class="div-full">
+                    <label for="disposal_sk" class="form-label">Disposal (SK)</label>
+                    <input type="text" class="form-input" id="disposal_sk"
+                           name="disposal_sk" required>
+                </div>
+
+                <div class="div-full">
+                    <label for="access_en" class="form-label">Disposal (EN)</label>
+                    <input type="text" class="form-input" id="access_en"
+                           name="access_en" required>
+                </div>
+                <div class="div-full">
+                    <label for="access_sk" class="form-label">Disposal (SK)</label>
+                    <input type="text" class="form-input" id="access_sk"
+                           name="access_sk" required>
+                </div>
+
                 <div class="div-full">
                     <label for="description_en" class="form-label">Description (EN)</label>
                     <textarea class="form-textarea" id="description_en" name="Description"></textarea>

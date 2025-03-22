@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Use Vite helper -->
 </head>
 <body>
-<div class="container">
+<div class="container mx-auto mt-4">
     <header>
         <div class="flex m-0 p-0">
             <div class="flex items-center justify-center bg-white shadow-lg p-0">
@@ -23,7 +23,7 @@
 
                 <h1 class="h1-screen">Welcome to Our School Chemical Store</h1>
                 <h2 class="h2-screen">Your Trusted Source for Quality Chemicals</h2>
-                <p class="mt-2 text-gray-600">Your trusted source for quality chemicals. Explore our products and find
+                <p class="mt-2 text-gray-600">Your trusted source for quality chemicals. Explore our supplies and find
                     what you need!</p>
                 @if (Auth::check())
                     <p>Hello, You are logged in as {{ Auth::user()->uid[0] }}</p>
