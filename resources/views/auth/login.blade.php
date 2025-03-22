@@ -18,7 +18,7 @@
 @endif
 <div class="min-h-screen bg-gray-100">
 
-    <div class="container flex items-center justify-center h-screen">
+    <div class="container flex items-center justify-center  mx-auto h-screen">
         <div class="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
             <h1 class="h1-screen">Chemical Store Login</h1>
             <form action="{{ route('login') }}" method="POST">
