@@ -4,7 +4,8 @@ namespace App\Ldap;
 
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use LdapRecord\Models\OpenLDAP\User;
+//use LdapRecord\Models\OpenLDAP\User;
+use LdapRecord\Models\ActiveDirectory\User;
 use Spatie\Permission\Traits\HasRoles;
 
 // This trait provides the implementation for the Authenticatable interface
@@ -12,5 +13,5 @@ use Spatie\Permission\Traits\HasRoles;
 class LdapUser extends User implements AuthenticatableContract {
     use HasRoles;
 
-    public static array $objectClasses = [ 'inetOrgPerson'  ];
+  //  public static array $objectClasses = [ 'inetOrgPerson'  ];
 }
