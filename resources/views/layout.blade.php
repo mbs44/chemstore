@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chemical Store</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Use Vite helper -->
-{{--    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">--}}
+    @if (app()->environment('production'))
+        <link rel="stylesheet" href="{{ mix('build/assets/app.css') }}">
+        <script src="{{ mix('build/assets/app.js') }}" defer></script>
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Use Vite helper -->
+    @endif
 </head>
 <body class="bg-gray-100">
 <div class="min-h-screen bg-gray-100">
