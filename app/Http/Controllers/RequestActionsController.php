@@ -30,7 +30,7 @@ class RequestActionsController extends Controller
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
-            'id' => 'required|integer|exists:requests,id', // Example validation
+            'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
         // Validate the request data
         $requestModel = RequestModel::findOrFail($request->id);
@@ -49,7 +49,7 @@ class RequestActionsController extends Controller
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
-            'id' => 'required|integer|exists:requests,id', // Example validation
+            'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
         // Validate the request data
         $requestModel = RequestModel::findOrFail($request->id);
@@ -67,7 +67,7 @@ class RequestActionsController extends Controller
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
-            'id' => 'required|integer|exists:requests,id', // Example validation
+            'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
         // Validate the request data
         $requestModel = RequestModel::findOrFail($request->id);
