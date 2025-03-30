@@ -14,7 +14,7 @@ class StudentRequest extends Model
     use HasFactory;
 
     // Specify the table name if it doesn't follow Laravel's naming convention
-    protected $table = 'requests';
+    protected $table = 'student_requests';
 
     // Define the fillable attributes
     protected $fillable = [

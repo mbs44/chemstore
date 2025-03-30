@@ -115,7 +115,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $ethylAcetate->dangerousProperties()->attach([$f->id,$xi->id]);
-        $ethylAcetate>safetyItems()->attach([$fumeHood->id, $gloves->id, $gloves->id]);
+        $ethylAcetate->safetyItems()->attach([$fumeHood->id, $gloves->id, $gloves->id]);
 
         $phenolphthalein = Chemical::create([
             'chemical_formula' => 'C20H14O4', 'chemical_name_sk' => 'fenolftaleín 1%', 'chemical_name_en' => 'phenolphthalein',
@@ -124,7 +124,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $phenolphthalein->dangerousProperties()->attach([$f->id,$xi->id]);
-        $phenolphthalein>safetyItems()->attach([$fumeHood->id, $gloves->id, $gloves->id]);
+        $phenolphthalein->safetyItems()->attach([$fumeHood->id, $gloves->id, $gloves->id]);
 
         $fructose = Chemical::create([
             'chemical_formula' => 'C6H12O6', 'chemical_name_sk' => 'fruktóza', 'chemical_name_en' => 'fructose ',
@@ -159,7 +159,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $magnesium ->dangerousProperties()->attach([$f->id]);
-        $magnesium >safetyItems()->attach([$gloves->id]);
+        $magnesium ->safetyItems()->attach([$gloves->id]);
 
         $bicarbonateOfSoda  = Chemical::create([
             'chemical_formula' => 'MgO', 'chemical_name_sk' => 'hydrogenuhličitan sodný', 'chemical_name_en' => 'Bicarbonate of Soda',
@@ -169,7 +169,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $bicarbonateOfSoda->dangerousProperties()->attach([$f->id]);
-        $bicarbonateOfSoda >safetyItems()->attach([$gloves->id]);
+        $bicarbonateOfSoda ->safetyItems()->attach([$gloves->id]);
 
         $sodiumHydroxide = Chemical::create([
             'chemical_formula' => 'NaOH', 'chemical_name_sk' => 'hydroxid sodný', 'chemical_name_en' => 'Sodium hydroxide',
@@ -179,7 +179,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $sodiumHydroxide ->dangerousProperties()->attach([$c->id]);
-        $sodiumHydroxide  >safetyItems()->attach([$apron->id, $gloves->id, $fumeHood->id, $goggles->id]);
+        $sodiumHydroxide  ->safetyItems()->attach([$apron->id, $gloves->id, $fumeHood->id, $goggles->id]);
 
         $copperIIchloride = Chemical::create([
             'chemical_formula' => 'CuCl2', 'chemical_name_sk' => 'chlorid meďnatý', 'chemical_name_en' => 'Copper(II) chloride',
@@ -189,7 +189,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $copperIIchloride ->dangerousProperties()->attach([$n->id,$xn->id]);
-        $copperIIchloride  >safetyItems()->attach([$gloves->id,$apron->id]);
+        $copperIIchloride  ->safetyItems()->attach([$gloves->id,$apron->id]);
 
         $iodine = Chemical::create([
             'chemical_formula' => 'I', 'chemical_name_sk' => 'jód', 'chemical_name_en' => 'Iodine',
@@ -199,7 +199,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $iodine ->dangerousProperties()->attach([$n->id,$xn->id]);
-        $iodine  >safetyItems()->attach([$gloves->id,$apron->i,$fumeHood->id]);
+        $iodine  ->safetyItems()->attach([$gloves->id,$apron->id,$fumeHood->id]);
 
         $potassiumIodide = Chemical::create([
             'chemical_formula' => 'KI', 'chemical_name_sk' => 'jodid draselný', 'chemical_name_en' => 'Potassium iodide',
@@ -216,7 +216,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $citricAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
-        $citricAcid >safetyItems()->attach([$gloves->id,$apron->i, $fumeHood->id, $goggles->id]);
+        $citricAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $nitricAcid = Chemical::create([
             'chemical_formula' => 'HNO₃', 'chemical_name_sk' => 'kyselina dusičná', 'chemical_name_en' => 'Nitric acid',
@@ -226,7 +226,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $nitricAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
-        $nitricAcid >safetyItems()->attach([$gloves->id,$apron->i, $fumeHood->id, $goggles->id]);
+        $nitricAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $hydrochloricAcid = Chemical::create([
             'chemical_formula' => 'HCl', 'chemical_name_sk' => 'kyselina chlorovodíková', 'chemical_name_en' => 'Hydrochloric acid',
@@ -236,7 +236,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $hydrochloricAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
-        $hydrochloricAcid >safetyItems()->attach([$gloves->id,$apron->i, $fumeHood->id, $goggles->id]);
+        $hydrochloricAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $acceticAcid = Chemical::create([
             'chemical_formula' => 'CH₃COOH', 'chemical_name_sk' => 'kyselina octová', 'chemical_name_en' => 'AcceticA cid',
@@ -246,7 +246,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $acceticAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
-        $acceticAcid >safetyItems()->attach([$gloves->id,$apron->i, $fumeHood->id, $goggles->id]);
+        $acceticAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $sulfuricAcid = Chemical::create([
             'chemical_formula' => 'H₂SO₄', 'chemical_name_sk' => 'kyselina sírová', 'chemical_name_en' => 'Sulfuric acid',
@@ -256,7 +256,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $sulfuricAcid ->dangerousProperties()->attach([$c->id]);
-        $sulfuricAcid >safetyItems()->attach([$gloves->id,$apron->i, $fumeHood->id, $goggles->id]);
+        $sulfuricAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $litmus  = Chemical::create([
             'chemical_formula' => 'chemical composition C9H10O5N and C13H22O6, for blue and red litmus papers respectively', 'chemical_name_sk' => 'lakmus', 'chemical_name_en' => 'Litmus',
@@ -272,7 +272,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $potassiumPermanganate ->dangerousProperties()->attach([$o->id,$n->id,$c->id]);
-        $potassiumPermanganate >safetyItems()->attach([$gloves->id,$apron->id]);
+        $potassiumPermanganate ->safetyItems()->attach([$gloves->id,$apron->id]);
 
         $methylOrange = Chemical::create([
             'chemical_formula' => 'C14H14N3NaO3S', 'chemical_name_sk' => 'metyloranž', 'chemical_name_en' => 'Sulfuric acid',
@@ -282,7 +282,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $methylOrange ->dangerousProperties()->attach([$t->id]);
-        $methylOrange >safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id]);
+        $methylOrange ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id]);
 
         $manganeseIVoxide = Chemical::create([
             'chemical_formula' => 'MnO₂', 'chemical_name_sk' => 'oxid manganičitý', 'chemical_name_en' => 'Manganese(IV) oxide',
@@ -292,7 +292,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $manganeseIVoxide ->dangerousProperties()->attach([$xn->id]);
-        $manganeseIVoxide >safetyItems()->attach([$gloves->id,$apron->id, $respirator->id]);
+        $manganeseIVoxide ->safetyItems()->attach([$gloves->id,$apron->id, $respirator->id]);
 
         $hydrogenPeroxide = Chemical::create([
             'chemical_formula' => 'H2O2', 'chemical_name_sk' => 'peroxid vodíka', 'chemical_name_en' => 'Hydrogen peroxide',
@@ -302,7 +302,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $hydrogenPeroxide ->dangerousProperties()->attach([$xn->id,$c->id]);
-        $hydrogenPeroxide >safetyItems()->attach([$gloves->id,$apron->id, $respirator->id]);
+        $hydrogenPeroxide ->safetyItems()->attach([$gloves->id,$apron->id, $respirator->id]);
 
         $sulfur= Chemical::create([
             'chemical_formula' => 'S8', 'chemical_name_sk' => 'síra', 'chemical_name_en' => 'Sulfur',
@@ -318,7 +318,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $sodiumSulfate ->dangerousProperties()->attach([$xn->id,$n->id]);
-        $sodiumSulfate >safetyItems()->attach([$gloves->id,$apron->id]);
+        $sodiumSulfate ->safetyItems()->attach([$gloves->id,$apron->id]);
 
         $starch = Chemical::create([
             'chemical_formula' => '(C6H10O5)n)', 'chemical_name_sk' => 'škrob', 'chemical_name_en' => 'Starch',

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('chemical_formula');
             $table->string('chemical_name_en');
             $table->string('chemical_name_sk');
-            $table->string('disposal_en');
-            $table->string('disposal_sk');
+            $table->string('disposal_en')->nullable();
+            $table->string('disposal_sk')->nullable();
             $table->string('access_en');
             $table->string('access_sk');
             $table->foreignId('supplies_id')->constrained()->restrictOnDelete();;
