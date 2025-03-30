@@ -67,7 +67,7 @@ class StudentRequest extends Model
             $dateTime = new DateTime($isoDate);
             return $dateTime->format('d.m.Y');
         } else {
-            return 'None';
+            return '';
         }
     }
 }

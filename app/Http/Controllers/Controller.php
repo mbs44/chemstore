@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 abstract class Controller
 {
@@ -29,5 +31,13 @@ abstract class Controller
         if ( ! $this->checkRoles($roles))
             throw new AuthorizationException('You do not have permission for this action.');
     }
+
+    public static function currentLanguage(Request $request) : string
+    {
+        // Get the current language from the session
+        return $request->session()->get('language', 'en'); // Default to English
+
+    }
+
     //
 }

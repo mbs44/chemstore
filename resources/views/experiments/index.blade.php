@@ -4,25 +4,27 @@
 
 @section('content')
     <div class="div-container">
-        <h1 class="h1-screen">Experiments Search</h1>
+        <h1 class="h1-screen">{{$isEnglish?'Experiments Search':'Vyhľadaj experiment'}}</h1>
 
         <!-- Filter Form -->
         <form action="{{ route('experiments.index') }}" method="GET">
             <div class="div-form">
+                @if ($isEnglish)
                 <div class="div-input">
-                    <label for="experiment_name_en" class="form-label">Experiment Name (EN)</label>
+                    <label for="experiment_name_en" class="form-label">Experiment Name</label>
                     <input type="text" class="form-input" id="experiment_name_en" name="experiment_name_en"
                            value="{{ request()->input('name_en') }}">
                 </div>
+                @else
                 <div class="div-input">
-                    <label for="experiment_name_sk" class="form-label">Experiment Name (SK)</label>
+                    <label for="experiment_name_sk" class="form-label">Názov experimentu</label>
                     <input type="text" class="form-input" id="experiment_name_sk" name="experiment_name_sk"
                            value="{{ request()->input('name_sk') }}">
                 </div>
-
+                @endif
 
                 <div class="div-full">
-                    <label for="chemicals" class="form-label">Required Chemicals:</label>
+                    <label for="chemicals" class="form-label">{{$isEnglish?'Required Chemicals':'Povinné chemikálie'}}</label>
                     <select id="chemicals" name="chemicals[]" multiple="" data-hs-select='{
   "placeholder": "Select chemicals ...",
   "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
@@ -37,12 +39,12 @@
 }' class="hidden">
                         @foreach($chemicals as $chemical)
                             <option {{ in_array($chemical->id, $selectedChemicals) ? 'selected=""' : '' }}
-                                    value="{{ $chemical->id }}">{{ $chemical->chemical_formula }}</option>
+                                    value="{{ $chemical->id }}">{{$isEnglish?$chemical->chemical_name_en:$chemical->chemical_name_sk }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="div-full">
-                    <button type="submit" class="button-submit">Filter</button>
+                    <button type="submit" class="button-submit">{{$isEnglish?'Filter':'Vyhľadaj'}}</button>
                 </div>
             </div>
 
@@ -51,27 +53,33 @@
         <table class="table-result">
             <thead>
             <tr>
+                @if ($isEnglish)
                 <th class="table-col">Name (EN)</th>
-                <th class="table-col">Name (SK)</th>
-                <th class="table-col">Actions</th>
+                @else
+                <th class="table-col">Názov</th>
+                @endif
+                <th class="table-col">{{$isEnglish?'Actions':'Akcie'}}</th>
             </tr>
             </thead>
             <tbody>
             @foreach($experiments as $experiment)
                 <tr>
+                    @if ($isEnglish)
                     <td class="table-cell text-left">{{ $experiment->name_en }}</td>
+                    @else
                     <td class="table-cell text-left">{{ $experiment->name_sk }}</td>
+                    @endif
                     <td class="table-cell text-left">
                         <!-- You can add more action links here, like Edit or Delete -->
-                        <a href="{{ route('experiments.show', $experiment->id) }}" class="bg-blue-500 button-action">View</a>
+                        <a href="{{ route('experiments.show', $experiment->id) }}" class="bg-blue-500 button-action">{{$isEnglish?'View':'Zobraziť'}}</a>
                         @if ( $allowEdit )
                         <a href="{{ route('experiments.edit', $experiment) }}"
-                           class="bg-yellow-500 button-action">Edit</a>
+                           class="bg-yellow-500 button-action">{{$isEnglish?'Edit':'Zmeniť'}}</a>
                         <form action="{{ route('experiments.destroy', $experiment) }}" method="POST"
                               style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 button-action">Delete</button>
+                            <button type="submit" class="bg-red-500 button-action">{{$isEnglish?'Delete':'Zmazať'}}</button>
                         </form>
                         @endif
                     </td>
@@ -84,7 +92,7 @@
             {{ $experiments->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>
         @if ( $allowEdit )
-        <a href="{{ route('experiments.create') }}" class="button-submit">Add New Experiment</a>
+        <a href="{{ route('experiments.create') }}" class="button-submit">{{$isEnglish?'Add New Experiment':'Pridaj nový experiment'}}</a>
         @endif
     </div>
 @endsection

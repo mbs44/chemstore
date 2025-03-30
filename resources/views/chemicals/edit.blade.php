@@ -11,16 +11,14 @@
             @method('PUT')
             <div class="div-form">
                 <div class="div-input">
-                    <label for="chemical_name_en" class="form-label">Name
-                        (EN)</label>
+                    <label for="chemical_name_en" class="form-label">Name (EN)</label>
                     <input type="text" id="chemical_name_en" name="chemical_name_en"
                            value="{{ old('chemical_name_en', $chemical->chemical_name_en) }}"
                            class="form-input" required>
                 </div>
 
                 <div class="div-input">
-                    <label for="chemical_name_sk" class="form-label">Name
-                        (SK)</label>
+                    <label for="chemical_name_sk" class="form-label">Name (SK)</label>
                     <input type="text" id="chemical_name_sk" name="chemical_name_sk"
                            value="{{ old('chemical_name_sk', $chemical->chemical_name_sk) }}"
                            class="form-input" required>
@@ -84,6 +82,17 @@
                             class="form-input">
                 </div>
                 <div class="div-full">
+                    <label for="description_en" class="form-label">Description (EN)</label>
+                    <textarea id="description_en" name="description_en" rows="4"
+                              class="form-input">{{ old('description_en', $chemical->description_en) }}</textarea>
+                </div>
+                <div class="div-full">
+                    <label for="description_sk" class="form-label">Description (SK)</label>
+                    <textarea id="description_sk" name="description_sk" rows="4"
+                              class="form-input">{{ old('description_sk', $chemical->description_sk) }}</textarea>
+                </div>
+
+                <div class="div-full">
                     <label for="dangerous_properties" class="form-label">Dangerous Properties:</label>
 
                     <!-- Select -->
@@ -101,7 +110,9 @@
 }' class="hidden">
                         @foreach($dangerousProperties as $property)
                             <option {{ in_array($property->id, $selectedProperties) ? 'selected=""' : '' }}
-                                    value="{{ $property->id }}">{{ $property->code }} ({{ $property->name_en }} / {{ $property->name_sk }})</option>
+                                    value="{{ $property->id }}">
+                                {{ $property->code }} - {{ $isEnglish?$property->name_en :$property->name_sk }})
+                            </option>
                         @endforeach
                     </select>
 
@@ -124,20 +135,11 @@
 }' class="hidden">
                         @foreach($safetyItems as $item)
                             <option {{ in_array($item->id, $selectedItems) ? 'selected=""' : '' }}
-                                value="{{ $item->id }}">{{ $item->name_en }} / {{ $item->name_sk }}</option>
+                                value="{{ $item->id }}">{{ $isEnglish ? $item->name_en : $item->name_sk }}
+                            </option>
                         @endforeach
                     </select>
 
-                </div>
-                <div class="div-full">
-                    <label for="description_en" class="form-label">Description (EN)</label>
-                    <textarea id="description_en" name="description_en" rows="4"
-                              class="form-input">{{ old('description_en', $chemical->description_en) }}</textarea>
-                </div>
-                <div class="div-full">
-                    <label for="description_sk" class="form-label">Description (SK)</label>
-                    <textarea id="description_sk" name="description_sk" rows="4"
-                              class="form-input">{{ old('description_sk', $chemical->description_sk) }}</textarea>
                 </div>
 
             </div>

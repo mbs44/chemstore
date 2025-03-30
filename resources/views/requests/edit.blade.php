@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="div-container">
-        <h1 class="h1-screen">Request for Chemicals</h1>
+        <h1 class="h1-screen">{{$isEnglish?'Update Request for Chemicals':'Zmena žiadosti o chemikálie'}}</h1>
 
         <form action="{{ route('requests.update', $request->id) }}" method="POST">
             @csrf
@@ -14,7 +14,7 @@
                 <div class="div-input">
                     <label for="experiment_id" class="form-label">Experiment</label>
                     <select id="experiment_id" name="experiment_id" class="form-input" required>
-                        <option value="">Select an experiment</option>
+                        <option value="">{{$isEnglish?'Select an experiment':'Zvoľ si experiment'}}</option>
                         @foreach ($experiments as $item)
                             <option value="{{ $item->id }}" {{ old('experiment_id', $request->experiment_id) == $item->id ? 'selected' : '' }}>
                                 {{ $item->name_en }}
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="div-input">
-                    <label for="experiment_date" class="form-label">Experiment Date</label>
+                    <label for="experiment_date" class="form-label">{{$isEnglish?'Experiment Date':'Dátum experimentu'}}</label>
                     <div class="relative max-w-sm">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -36,18 +36,24 @@
                         </div>
                         <input id="experiment_date" name="experiment_date" required datepicker datepicker-format="dd.mm.yyyy" datepicker-autohide type="text"
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                               placeholder="Select date" value="{{ old('experiment_date',  $request->localDate($request->experiment_date)) }}">
+                               placeholder="{{$isEnglish?'Select date':'Zvoľ dátum'}}" value="{{ old('experiment_date',  $request->localDate($request->experiment_date)) }}">
                     </div>
                 </div>
 
                 <div class="div-full">
-                    <h2 class="text-lg font-semibold mb-2">Chemical List</h2>
+                    <h2 class="text-lg font-semibold mb-2">{{$isEnglish?'Chemical List':'Zoznam chemikálií'}}</h2>
                     <table class="min-w-full border-collapse border border-gray-200">
                         <thead>
                         <tr>
-                            <th class="table-col">Chemical</th>
-                            <th class="table-col">Quantity</th>
-                            <th class="table-col">Action</th>
+                            @if ($isEnglish)
+                                <th class="table-col">Chemical</th>
+                                <th class="table-col">Quantity</th>
+                                <th class="table-col">Action</th>
+                            @else
+                                <th class="table-col">Chemikália</th>
+                                <th class="table-col">Množstvo</th>
+                                <th class="table-col">Akcia</th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody id="chemicals">
@@ -57,11 +63,11 @@
                                 <select name="chemicals[{{$loop->index }}][chemical_id]"
                                         class="form-input"
                                         required>
-                                    <option value="{{ $chemical->id }}">Select a chemical</option>
+                                    <option value="{{ $chemical->id }}">{{$isEnglish?'Select a chemical':'Zvoľ si chemikáliu'}}</option>
                                     @foreach($chemicals as $item)
                                         <option value="{{ $item->id }}"
                                             {{ old('chemicals[' . $loop->index . '][chemical_id]' , $chemical->id) == $item->id ? 'selected' : '' }}
-                                        >{{ $item->chemical_name_en }} ({{ $item->chemical_formula }}) in {{ $item->measureUnit->name }}</option>
+                                        >{{$isEnglish? $chemical->chemical_name_en : $chemical->chemical_name_sk }} {{$isEnglish?'in units -':'v jednotkách -'}} {{ $chemical->measureUnit->name }}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -72,9 +78,9 @@
                             </td>
                             <td class="table-cell">
                                 @if ( $loop->index > 0)
-                                    <button type="button" class="delete-chemical text-red-500 hover:underline">Delete</button>
+                                    <button type="button" class="delete-chemical text-red-500 hover:underline">{{$isEnglish?'Delete':'Zmazať'}}</button>
                                 @else
-                                    <button type="button" class="delete-chemical text-gray-500">No action</button>
+                                    <button type="button" class="delete-chemical text-gray-500">{{$isEnglish?'No action':'Žiadna akcia'}}</button>
                                 @endif
                             </td>
                         </tr>
@@ -85,27 +91,26 @@
                 <div class="div-full">
                     <button type="button" id="add-chemical"
                             class="button-add-item">
-                        Add Another Chemical
+                        {{$isEnglish?'Add Another Chemical':'Pridaj ďalšiu chemikáliu'}}
                     </button>
                 </div>
                 <div class="div-full">
-                    <label for="note" class="form-label">Note</label>
+                    <label for="note" class="form-label">{{$isEnglish?'Note':'Poznámka'}}</label>
                     <textarea class="form-textarea" id="note"
                               name="note">{{ old('note', $request->note) }}</textarea>
                 </div>
                 @if ( $allowApproval )
                 <div class="div-full">
-                    <label for="teacher_note" class="form-label">Teacher Note</label>
+                    <label for="teacher_note" class="form-label">{{$isEnglish?'Teacher Note':'Poznámka učiteľa'}}</label>
                     <textarea class="form-textarea" id="teacher_note"
                               name="teacher_note">{{ old('teacher_note', $request->teacher_note) }}</textarea>
                 </div>
                 @endif
-
             </div>
             @if ( $allowApproval || $request->state_id == 1 )
-                <button type="submit" class="button-submit">Update Request</button>
+                <button type="submit" class="button-submit">{{$isEnglish?'Update Request':'Zmeň žiadosť'}}</button>
             @endif
-            <a href="{{ route('requests.index') }}" class="button-cancel">Close</a>
+            <a href="{{ route('requests.index') }}" class="button-cancel">{{$isEnglish?'Cancel':'Späť'}}</a>
 
         </form>
 
@@ -124,9 +129,9 @@
                 <select name="chemicals[${chemicalCount}][chemical_id]"
                         class="form-input"
                         required>
-                    <option value="">Select a chemical</option>
+                    <option value="">{{$isEnglish?'Select a chemical':'Zvoľ si chemikáliu'}}</option>
                     @foreach($chemicals as $chemical)
-            <option value="{{ $chemical->id }}">{{ $chemical->chemical_name_en }} ({{ $chemical->chemical_formula }}) in {{ $chemical->measureUnit->name }}</option>
+            <option value="{{ $chemical->id }}">{{$isEnglish? $chemical->chemical_name_en : $chemical->chemical_name_sk }} {{$isEnglish?'in units -':'v jednotkách -'}} {{ $chemical->measureUnit->name }}</option>
                     @endforeach
             </select>
         </td>
@@ -136,7 +141,7 @@
                        required>
             </td>
             <td class="table-cell">
-                <button type="button" class="delete-chemical text-red-500 hover:underline">Delete</button>
+                <button type="button" class="delete-chemical text-red-500 hover:underline">{{$isEnglish?'Delete':'Zmazať'}}</button>
             </td>
         `;
 

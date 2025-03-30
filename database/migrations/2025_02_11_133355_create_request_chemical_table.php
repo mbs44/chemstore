@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('request_chemical', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chemical_id')->constrained()->onDelete('cascade');
-            $table->foreignId('request_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_request_id')->constrained()->onDelete('cascade');
             $table->decimal('quantity');
             $table->foreignId('measure_unit_id')->constrained()->restrictOnDelete();
             $table->timestamps();

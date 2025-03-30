@@ -63,14 +63,20 @@ class RequestController extends Controller
 
         if ($experimentDateFrom) {
             $dateTime = DateTime::createFromFormat('d.m.Y', $experimentDateFrom);
-            $isoDate = $dateTime->format('Y-m-d');
-            $query->where('experiment_date', '>',  $isoDate );
+            if ($dateTime) {
+                // Format the date to ISO format (yyyy-mm-dd)
+                $isoDate = $dateTime->format('Y-m-d');
+                $query->where('experiment_date', '>',  $isoDate );
+            }
         }
 
         if ($experimentDateTo) {
             $dateTime = DateTime::createFromFormat('d.m.Y', $experimentDateTo);
-            $isoDate = $dateTime->format('Y-m-d');
-            $query->where('experiment_date', '<',  $isoDate );
+            if ($dateTime) {
+                // Format the date to ISO format (yyyy-mm-dd)
+                $isoDate = $dateTime->format('Y-m-d');
+                $query->where('experiment_date', '<',  $isoDate );
+            }
         }
 
         if ($experimentId) {
@@ -117,7 +123,7 @@ class RequestController extends Controller
     {
         $request->validate([
             'experiment_id' => 'required|exists:experiments,id',
-            'experiment_date' => 'required|date|after:today',
+            'experiment_date' => 'required|date',
             'note' => 'nullable|string',
             'chemicals' => 'required|array',
             'chemicals.*.chemical_id' => 'required|exists:chemicals,id',
@@ -125,7 +131,6 @@ class RequestController extends Controller
         ]);
 
         $dbUser = User::query()->where('username', $request->user()->uid)->first();
-
 
 // Input date in dd.mm.yyyy format
         $dateString = $request->experiment_date;
@@ -138,7 +143,7 @@ class RequestController extends Controller
             // Format the date to ISO format (yyyy-mm-dd)
             $isoDate = $dateTime->format('Y-m-d');
         } else {
-            return back()->withErrors(['message' => 'Invalid date format.'], 400);
+            return back()->withErrors(['message' => 'Invalid date format.'])->withInput();
         }
         // Start a database transaction
 
@@ -168,7 +173,7 @@ class RequestController extends Controller
 
             // Rollback the transaction if something failed
             DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to create request: ' . $e->getMessage()], 500);
+            return back()->withErrors(['message' => 'Failed to create request: ' . $e->getMessage()]);
 
         }
     }
@@ -215,7 +220,7 @@ class RequestController extends Controller
 
         $request->validate([
             'experiment_id' => 'required|exists:experiments,id',
-            'experiment_date' => 'required|date|after:today',
+            'experiment_date' => 'required|date',
             'note' => 'nullable|string',
             'teacher_note' => 'nullable|string',
             'chemicals' => 'required|array',
@@ -233,7 +238,7 @@ class RequestController extends Controller
             // Format the date to ISO format (yyyy-mm-dd)
             $isoDate = $dateTime->format('Y-m-d');
         } else {
-            return back()->withErrors(['message' => 'Invalid date format.'], 400);
+            return back()->withErrors(['message' => 'Invalid date format.'])->withInput();
         }
 
         DB::beginTransaction();
@@ -260,7 +265,7 @@ class RequestController extends Controller
         } catch (Exception $e) {
             // Rollback the transaction if something failed
             DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to create request: ' . $e->getMessage()], 500);
+            return back()->withErrors(['message' => 'Failed to create request: ' . $e->getMessage()]);
 
         }
     }
@@ -272,12 +277,4 @@ class RequestController extends Controller
         return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
     }
 
-    // Remove the specified request from storage
-    public function approve(StudentRequest $requestModel): RedirectResponse
-    {
-        $requestModel->update([
-            'state_id' => 'approved',
-        ]);
-        return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
-    }
 }

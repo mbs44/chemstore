@@ -10,22 +10,22 @@
             @csrf
 
             <div class="div-input">
-                <label for="name_en" class="form-label">Name (English)</label>
+                <label for="name_en" class="form-label">Name (EN)</label>
                 <input type="text" class="form-input" id="name_en" name="name_en" required>
             </div>
 
             <div class="div-input">
-                <label for="name_sk" class="form-label">Name (Slovak)</label>
+                <label for="name_sk" class="form-label">Name (SK)</label>
                 <input type="text" class="form-input" id="name_sk" name="name_sk" required>
             </div>
 
             <div class="div-full">
-                <label for="description_en" class="form-label">Description (English)</label>
+                <label for="description_en" class="form-label">Description (EN)</label>
                 <textarea class="form-textarea" id="description_en" name="description_en" rows="3"></textarea>
             </div>
 
             <div class="div-full">
-                <label for="description_sk" class="form-label">Description (Slovak)</label>
+                <label for="description_sk" class="form-label">Description (SK)</label>
                 <textarea class="form-textarea" id="description_sk" name="description_sk" rows="3"></textarea>
             </div>
 
@@ -46,7 +46,7 @@
   "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
 }' class="hidden">
                     @foreach($chemicals as $chemical)
-                        <option value="{{ $chemical->id }}">{{ $chemical->chemical_formula }}</option>
+                        <option value="{{ $chemical->id }}">{{$isEnglish?$chemical->chemical_name_en:$chemical->chemical_name_sk }}</option>
                     @endforeach
                 </select>
             </div>

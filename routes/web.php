@@ -9,6 +9,10 @@ use App\Http\Controllers\ChemicalController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 
+use App\Http\Controllers\LanguageController;
+
+Route::post('/language', [LanguageController::class, 'change'])->name('language.change');
+
 Route::resource('chemicals', ChemicalController::class)->middleware('auth');
 Route::resource('experiments', ExperimentController::class)->middleware('auth');
 Route::resource('requests', RequestController::class)->middleware('auth');

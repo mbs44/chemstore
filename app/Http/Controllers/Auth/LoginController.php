@@ -36,7 +36,7 @@ class LoginController extends Controller
             return redirect('/chemicals');
         }
         // Handle failed authentication
-        return back()->withErrors(['message' => 'Authentication failed.'], 401);
+        return back()->withErrors(['message' => 'Authentication failed. Username or password is invalid']); //, 401
 
     }
 

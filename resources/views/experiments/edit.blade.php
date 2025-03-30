@@ -11,25 +11,25 @@
             @method('PUT') <!-- Use PUT method for updating -->
 
             <div class="div-input">
-                <label for="name_en">Name (English)</label>
+                <label for="name_en">Name (EN)</label>
                 <input type="text" class="form-input" id="name_en" name="name_en"
                        value="{{ old('name_en', $experiment->name_en) }}" required>
             </div>
 
             <div class="div-input">
-                <label for="name_sk">Name (Slovak)</label>
+                <label for="name_sk">Name (SK)</label>
                 <input type="text" class="form-input" id="name_sk" name="name_sk"
                        value="{{ old('name_sk', $experiment->name_sk) }}" required>
             </div>
 
             <div class="div-full">
-                <label for="description_en">Description (English)</label>
+                <label for="description_en">Description (EN)</label>
                 <textarea class="form-textarea" id="description_en" name="description_en"
                           rows="3">{{ old('description_en', $experiment->description_en) }}</textarea>
             </div>
 
             <div class="div-full">
-                <label for="description_sk">Description (Slovak)</label>
+                <label for="description_sk">Description (SK)</label>
                 <textarea class="form-textarea" id="description_sk" name="description_sk"
                           rows="3">{{ old('description_sk', $experiment->description_sk) }}</textarea>
             </div>
@@ -51,7 +51,7 @@
 }' class="hidden">
                     @foreach($chemicals as $chemical)
                         <option {{ in_array($chemical->id, $selectedChemicals) ? 'selected=""' : '' }}
-                                value="{{ $chemical->id }}">{{ $chemical->chemical_formula }}</option>
+                                value="{{ $chemical->id }}">{{$isEnglish?$chemical->chemical_name_en:$chemical->chemical_name_sk }}</option>
                     @endforeach
                 </select>
             </div>
