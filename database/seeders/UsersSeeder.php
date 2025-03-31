@@ -21,11 +21,15 @@ class UsersSeeder extends Seeder
                 'username' => 'teacher',
                 'email' => 'teacher@gjh.sk',
                 'is_teacher' => true,
+                'is_admin' => true,
+                'is_student' => false,
             ],
             [
                 'username' => 'oravec',
                 'email' => 'oravec@gjh.sk',
+                'is_teacher' => true,
                 'is_admin' => true,
+                'is_student' => false,
             ]
         ]);
     }

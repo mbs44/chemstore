@@ -16,7 +16,9 @@
                 <p class="mt-2"><strong>Supplies:</strong> {{ $chemical->supplies->name_en }}</p>
                 <p class="mt-2"><strong>Measure Unit:</strong> {{ $chemical->measureUnit->name ?? 'N/A' }}</p> <!-- Assuming we have a relationship defined -->
                 <p class="mt-2"><strong>Disposal:</strong> {{ $chemical->disposal_en }}</p>
+                @if ( $isTeacher)
                 <p class="mt-2"><strong>Access:</strong> {{ $chemical->access_en }}</p>
+                @endif
                 <p class="mt-2"><strong>Description:</strong> {{ $chemical->description_en }}</p>
 
                 <p class="mt-2"><strong>Dangerous Properties:</strong></p>
@@ -49,7 +51,9 @@
                 <p class="mt-2"><strong>Zásoby:</strong> {{ $chemical->supplies->name_sk }}</p>
                 <p class="mt-2"><strong>Merná jednotka:</strong> {{ $chemical->measureUnit->name ?? 'N/A' }}</p> <!-- Assuming we have a relationship defined -->
                 <p class="mt-2"><strong>Odpad:</strong> {{ $chemical->disposal_sk }}</p>
+                @if ( $isTeacher)
                 <p class="mt-2"><strong>Prístup:</strong> {{ $chemical->access_sk }}</p>
+                @endif
                 <p class="mt-2"><strong>Popis:</strong> {{ $chemical->description_sk }}</p>
 
                 <p class="mt-2"><strong>Nebezpečné vlastnosti:</strong></p>

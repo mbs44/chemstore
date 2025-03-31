@@ -22,16 +22,19 @@
     <header>
         <div class="flex m-0 p-0">
             <div class="flex items-center justify-center bg-white shadow-lg p-0">
-                <img src="{{ asset('images/logo5.png') }}" alt="Chemical Store Logo" class="h-64">
+                <img src="{{ asset('images/logo5.png') }}" alt="Chemical Store Logo" class="h-48">
             </div>
             <!-- Right Part: Text -->
 
-            <div class="flex-1 bg-gray-200 p-4">
+            <div class="flex-1 bg-gray-200 p-4 text-center">
 
                 <h1 class="h1-screen">Welcome to Our School Chemical Store</h1>
                 <h2 class="h2-screen">Your Trusted Source for Quality Chemicals</h2>
-                <p class="mt-2 text-gray-600">Your trusted source for quality chemicals. Explore our supplies and find
-                    what you need!</p>
+
+                <h1 class="h1-screen">Explore our application features</h1>
+            </div>
+
+            <div class="flex-2 bg-gray-200 p-4 text-right">
                 @if (Auth::check())
                     <p>Hello, You are logged in as {{ Auth::user()->uid[0] }}</p>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -40,10 +43,12 @@
                         <button type="submit" class="button-cancel">Logout</button>
                     </form>
                 @else
+
                     <p>You are not logged in.</p>
                     <div class="p-4">
-                    <a href="{{ route('login') }}" class="button-submit">Login</a>
+                        <a href="{{ route('login') }}" class="button-submit">Login</a>
                     </div>
+
                 @endif
             </div>
         </div>
@@ -52,20 +57,19 @@
 
     <main class="mt-4">
         <section class="featured-products mt-5">
-            <h2 class="h2-screen text-center">Explore our application features</h2>
             <div id="carouselHome" class="relative" data-carousel="slide">
                 <div class="relative h-56 overflow-hidden rounded-lg md:h-[832px]">
                     <div class="hidden duration-5000 ease-in-out" data-carousel-item="active">
-                        <p>We provide a wide range of chemicals for various experiments. Explore our storage and find
+                        <p class="h3-screen text-center">We provide a wide range of chemicals for various experiments. Explore our storage and find
                             what you need!</p>
                         <img src="{{ asset('images/chemicals.jpg') }}" class="block w-full" alt="Product 1">
                     </div>
                     <div class="hidden duration-5000 ease-in-out" data-carousel-item>
-                        <p>Choose your favorite chemical experiment you want to try!</p>
+                        <p class="h3-screen text-center">Choose your favorite chemical experiment you want to try!</p>
                         <img src="{{ asset('images/experiments.jpg') }}" class="block w-full" alt="Product 2">
                     </div>
                     <div class="hidden duration-5000 ease-in-out" data-carousel-item>
-                        <p>Ask your teacher for chemicals your experiment require. Maybe you'll be lucky today!</p>
+                        <p class="h3-screen text-center">Ask your teacher for chemicals your experiment require. Maybe you'll be lucky today!</p>
                         <img src="{{ asset('images/requests.jpg') }}" class="block w-full" alt="Product 3">
                     </div>
                 </div>

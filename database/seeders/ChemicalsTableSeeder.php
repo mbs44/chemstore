@@ -133,7 +133,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $glucose  = Chemical::create([
-            'chemical_formula' => 'C6H12O6', 'chemical_name_sk' => 'fruktóza', 'chemical_name_en' => 'fructose ',
+            'chemical_formula' => 'C6H12O6', 'chemical_name_sk' => 'fruktóza', 'chemical_name_en' => 'glucose ',
             'access_sk' => 'učiteľ/žiak', 'access_en' => 'teacher/student',
             'measure_unit_id' => $gram->id, 'supplies_id' => 1 //high
         ]);
@@ -143,7 +143,6 @@ class ChemicalsTableSeeder extends Seeder
             'access_sk' => 'učiteľ/žiak', 'access_en' => 'teacher/student',
             'measure_unit_id' => $gram->id, 'supplies_id' => 1 //high
         ]);
-
 
         $potassiumFerrocyanide  = Chemical::create([
             'chemical_formula' => 'K4[Fe(CN)6]', 'chemical_name_sk' => 'hexakyanoželeznatan draselný', 'chemical_name_en' => 'Potassium ferrocyanide',
@@ -209,7 +208,7 @@ class ChemicalsTableSeeder extends Seeder
         ]);
 
         $citricAcid  = Chemical::create([
-            'chemical_formula' => 'C₆H₈O₇', 'chemical_name_sk' => 'kyselina citrónová', 'chemical_name_en' => 'Iodine',
+            'chemical_formula' => 'C₆H₈O₇', 'chemical_name_sk' => 'kyselina citrónová', 'chemical_name_en' => 'Citric Acid',
             'disposal_sk' => 'riedenie vodou kanalizačný systém', 'disposal_en' => 'dilution with water sewage system',
             'access_sk' => 'učitel/žiak', 'access_en' => 'teacher/student)',
             'measure_unit_id' => $ml->id, 'supplies_id' => 1 //high
@@ -238,15 +237,15 @@ class ChemicalsTableSeeder extends Seeder
         $hydrochloricAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
         $hydrochloricAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
-        $acceticAcid = Chemical::create([
-            'chemical_formula' => 'CH₃COOH', 'chemical_name_sk' => 'kyselina octová', 'chemical_name_en' => 'AcceticA cid',
+        $aceticAcid = Chemical::create([
+            'chemical_formula' => 'CH₃COOH', 'chemical_name_sk' => 'kyselina octová', 'chemical_name_en' => 'Acetic Acid',
             'disposal_sk' => 'neutralizácia riedenie vodou kanalizačný systém', 'disposal_en' => 'neutralization dilution with water sewage system',
             'access_sk' => 'učitel/žiak iba s roztokom < 10%', 'access_en' => 'teacher/student only with solution < 10%',
             'measure_unit_id' => $ml->id, 'supplies_id' => 1 //high
         ]);
 
-        $acceticAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
-        $acceticAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
+        $aceticAcid ->dangerousProperties()->attach([$xi->id,$c->id]);
+        $aceticAcid ->safetyItems()->attach([$gloves->id,$apron->id, $fumeHood->id, $goggles->id]);
 
         $sulfuricAcid = Chemical::create([
             'chemical_formula' => 'H₂SO₄', 'chemical_name_sk' => 'kyselina sírová', 'chemical_name_en' => 'Sulfuric acid',
@@ -265,7 +264,7 @@ class ChemicalsTableSeeder extends Seeder
             'measure_unit_id' => $gram->id, 'supplies_id' => 1 //high
         ]);
         $potassiumPermanganate = Chemical::create([
-            'chemical_formula' => 'KMnO₄', 'chemical_name_sk' => 'manganistan draselný', 'chemical_name_en' => 'Sulfuric acid',
+            'chemical_formula' => 'KMnO₄', 'chemical_name_sk' => 'manganistan draselný', 'chemical_name_en' => 'Potassium Permanganate',
             'disposal_sk' => 'riedenie vodou kanalizačný systém', 'disposal_en' => 'dilution with water sewage system',
             'access_sk' => 'učiteľ/žiak', 'access_en' => 'teacher/student',
             'measure_unit_id' => $gram->id, 'supplies_id' => 1 //high
@@ -275,7 +274,7 @@ class ChemicalsTableSeeder extends Seeder
         $potassiumPermanganate ->safetyItems()->attach([$gloves->id,$apron->id]);
 
         $methylOrange = Chemical::create([
-            'chemical_formula' => 'C14H14N3NaO3S', 'chemical_name_sk' => 'metyloranž', 'chemical_name_en' => 'Sulfuric acid',
+            'chemical_formula' => 'C14H14N3NaO3S', 'chemical_name_sk' => 'metyloranž', 'chemical_name_en' => 'Methyl Orange',
             'disposal_sk' => 'riedenie vodou kanalizačný systém', 'disposal_en' => 'dilution with water sewage system',
             'access_sk' => 'učiteľ/žiak', 'access_en' => 'teacher/student',
             'measure_unit_id' => $gram->id, 'supplies_id' => 1 //high

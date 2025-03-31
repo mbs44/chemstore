@@ -265,16 +265,28 @@ class RequestController extends Controller
         } catch (Exception $e) {
             // Rollback the transaction if something failed
             DB::rollBack();
-            return back()->withErrors(['message' => 'Failed to create request: ' . $e->getMessage()]);
+            return back()->withErrors(['message' => 'Failed to update request: ' . $e->getMessage()]);
 
         }
     }
 
     // Remove the specified request from storage
-    public function destroy(StudentRequest $requestModel): RedirectResponse
+    public function destroy(StudentRequest $studentRequest): RedirectResponse
     {
-        $requestModel->delete();
-        return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
+        $this->assertRoles( [ 'admin', 'teacher']);
+        DB::beginTransaction();
+
+        try {
+            $studentRequest->chemicals()->detach();
+            $studentRequest->delete();
+
+            DB::commit();
+            return redirect()->route('requests.index')->with('success', 'StudentRequest deleted successfully.');
+        } catch (Exception $e) {
+            // Rollback the transaction if something failed
+            DB::rollBack();
+            return back()->withErrors(['message' => 'Failed to delete request: ' . $e->getMessage()]);
+        }
     }
 
 }

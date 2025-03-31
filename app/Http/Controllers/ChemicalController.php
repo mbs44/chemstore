@@ -140,8 +140,9 @@ class ChemicalController extends Controller
 
     public function show($id): View
     {
+        $isTeacher = $this->checkRoles([ 'admin', 'teacher']);
         $chemical = Chemical::with(['measureUnit', 'supplies', 'dangerousProperties'])->findOrFail($id);
-        return view('chemicals.show', compact('chemical'));
+        return view('chemicals.show', compact('chemical',   'isTeacher'));
     }
 
     /**
