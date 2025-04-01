@@ -14,4 +14,7 @@ class LdapUser extends User implements AuthenticatableContract {
     use HasRoles;
 
     public static array $objectClasses = [ 'inetOrgPerson'  ];
+
+    const authPasswordAttribute = 'password';
+    const authLoginAttribute = 'uid';
 }

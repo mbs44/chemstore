@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Ldap\LdapUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -26,8 +27,8 @@ class LoginController extends Controller
         //      $user = UserCustom::where('uid', $username)->first();
 
         $credentials = [
-            'uid' => $username,
-            'password' => $password
+            LdapUser::authLoginAttribute => $username,
+            LdapUser::authPasswordAttribute => $password
         ];
 
         if (Auth::guard('web')->attempt($credentials)) {
