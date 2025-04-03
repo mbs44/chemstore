@@ -12,10 +12,3 @@ cn: Teacher
 sn: User
 uid: teacher
 userPassword: Teacher123
-
-dn: uid=oravec,dc=gjh,dc=sk
-objectClass: inetOrgPerson
-cn: Oravec
-sn: User
-uid: oravec
-userPassword: Oravec123
