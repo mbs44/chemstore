@@ -14,7 +14,7 @@ class LoadUserRoles
 
         // Get the authenticated user
         $user = $event->user;
-        $uid = $user->getAuthIdentifier();
+        $uid = $user->uid[0];
 
         $dbUser = User::query()->where('username', $uid)->first();
 
