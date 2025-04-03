@@ -34,7 +34,7 @@
                           rows="3">{{ old('description_sk', $experiment->description_sk) }}</textarea>
             </div>
 
-            <!-- Select -->
+{{--                    Required chemicals multi select control from preline library --}}
             <div class="div-full">
                 <label for="chemicals" class="form-label">Required Chemicals:</label>
                 <select id="chemicals" name="chemicals[]" multiple="" data-hs-select='{

@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // create global variable available in all blade templates that contains current language flag taken from session
         View::composer('*', function ($view) {
             $view->with('isEnglish', Session::get('language', 'en') === 'en'); // Default to 'en' if not set
         });

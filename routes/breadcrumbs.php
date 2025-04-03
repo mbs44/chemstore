@@ -1,7 +1,8 @@
 <?php
 
-// Home
 use Diglactic\Breadcrumbs\Breadcrumbs;
+
+// Definition for all breadcrumbs used in the application
 
 Breadcrumbs::for('home', function ($trail) {
     $isEnglish = session('language') === 'en';
@@ -15,6 +16,7 @@ Breadcrumbs::for('chemicals.index', function ($trail) {
     $trail->push($isEnglish?'Chemicals':'Chemikálie', route('chemicals.index'));
 });
 
+// Create Chemical
 Breadcrumbs::for('chemicals.create', function ($trail) {
     $isEnglish = session('language') === 'en';
     $trail->parent('chemicals.index');
@@ -41,19 +43,20 @@ Breadcrumbs::for('experiments.index', function ($trail) {
     $trail->push('Experiment', route('experiments.index'));
 });
 
+// Create experiment
 Breadcrumbs::for('experiments.create', function ($trail) {
     $isEnglish = session('language') === 'en';
     $trail->parent('experiments.index');
     $trail->push($isEnglish?'Add':'Pridať', route('experiments.index'));
 });
 
-// Show Chemical
+// Show experiment
 Breadcrumbs::for('experiments.show', function ($trail, $id) {
     $trail->parent('experiments.index');
     $trail->push( 'ID: '.$id, route('experiments.show', $id));
 });
 
-// Edit Chemical
+// Edit experiment
 Breadcrumbs::for('experiments.edit', function ($trail, $experiment) {
     $isEnglish = session('language') === 'en';
     $trail->parent('experiments.index');
@@ -61,38 +64,40 @@ Breadcrumbs::for('experiments.edit', function ($trail, $experiment) {
 });
 
 
-// Experiments
+// Student requests
 Breadcrumbs::for('requests.index', function ($trail) {
     $isEnglish = session('language') === 'en';
     $trail->parent('home');
     $trail->push($isEnglish?'Request':'Žiadosť', route('requests.index'));
 });
 
+// Create request
 Breadcrumbs::for('requests.create', function ($trail) {
     $isEnglish = session('language') === 'en';
     $trail->parent('requests.index');
     $trail->push($isEnglish?'Add':'Pridať', route('requests.index'));
 });
 
-// Show Chemical
+// Show request
 Breadcrumbs::for('requests.show', function ($trail, $id) {
     $trail->parent('requests.index');
     $trail->push( 'ID: '.$id, route('requests.show', $id));
 });
 
-// Edit Chemical
+// Edit request
 Breadcrumbs::for('requests.edit', function ($trail, $request) {
     $isEnglish = session('language') === 'en';
     $trail->parent('requests.index');
     $trail->push($isEnglish?'Edit':'Zmeniť', route('requests.edit', $request->id));
 });
 
-// Experiments
+// Users
 Breadcrumbs::for('users.index', function ($trail) {
     $trail->parent('home');
     $trail->push('User', route('users.index'));
 });
 
+// Edit Users
 Breadcrumbs::for('users.edit', function ($trail, $request) {
     $trail->parent('users.index');
     $trail->push('Edit', route('users.edit', $request->id));

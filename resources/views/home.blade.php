@@ -1,7 +1,5 @@
 <!-- resources/views/home.blade.php -->
 
-<!-- resources/views/home.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +19,11 @@
 <div class="container mx-auto mt-4">
     <header>
         <div class="flex m-0 p-0">
+            <!-- Left Part: Logo -->
             <div class="flex items-center justify-center bg-white shadow-lg p-0">
                 <img src="{{ asset('images/logo5.png') }}" alt="Chemical Store Logo" class="h-48">
             </div>
-            <!-- Right Part: Text -->
+            <!-- Middle Part: Text -->
 
             <div class="flex-1 bg-gray-200 p-4 text-center">
 
@@ -34,6 +33,7 @@
                 <h1 class="h1-screen">Explore our application features</h1>
             </div>
 
+            <!-- Right Part: Login information -->
             <div class="flex-2 bg-gray-200 p-4 text-right">
                 @if (Auth::check())
                     <p>Hello, You are logged in as {{ Auth::user()->uid[0] }}</p>
@@ -56,6 +56,7 @@
     </header>
 
     <main class="mt-4">
+{{--        Carousel control from flowbite with images and small text--}}
         <section class="featured-products mt-5">
             <div id="carouselHome" class="relative" data-carousel="slide">
                 <div class="relative h-56 overflow-hidden rounded-lg md:h-[832px]">

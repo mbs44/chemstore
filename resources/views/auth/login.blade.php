@@ -13,6 +13,8 @@
     <div class="container flex items-center justify-center  mx-auto h-screen">
         <div class="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
             <h1 class="h1-screen">Chemical Store Login</h1>
+
+{{--            Generic display error section--}}
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <strong class="font-bold">Error!</strong>

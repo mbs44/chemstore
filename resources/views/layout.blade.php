@@ -1,4 +1,6 @@
 <!-- resources/views/layout.blade.php -->
+
+{{-- Common content for all authenticated screens --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,26 +20,10 @@
     <nav class="bg-white shadow">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
             <div class="relative flex items-center justify-between h-16">
-                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                    <a href="{{ route('chemicals.index') }}"
-                       class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Chemicals</a>
-                    <a href="{{ route('experiments.index') }}"
-                       class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Experiments</a>
-                    <a href="#"
-                       class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">About</a>
 
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit"
-                                class="btn text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">
-                            Logout
-                        </button>
-                    </form>
-                </div>
                 <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                    <div class="flex-shrink-0">
 
-                    </div>
+{{--                    Application menu items--}}
                     <div class="hidden sm:block sm:ml-6">
                         <div class="flex space-x-4">
                             <a href="{{ route('home') }}" class="text-lg font-bold">{{$isEnglish?'Chemical Store':'Chemický sklad'}}</a>
@@ -61,9 +47,11 @@
                                     {{$isEnglish?'Logout':'Odhlásenie'}}
                                 </button>
                             </form>
+
                             <div class="relative inline-block text-left">
                                 <form action="{{ route('language.change') }}" method="POST">
                                     @csrf
+                                    {{--Language dropdown with images--}}
                                     <div>
                                         <button id="dropdownButton" type="button"
                                                 class="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
@@ -117,7 +105,7 @@
 
 
     <div class="container mx-auto px-4 py-2">
-
+{{-- Generate breadcrumb --}}
         <nav class="flex" aria-label="breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 @foreach (Breadcrumbs::generate() as $breadcrumb)
@@ -142,6 +130,7 @@
 
     </div>
 
+{{--    Generic display error section--}}
     @if ($errors->any())
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <strong class="font-bold">Error!</strong>
@@ -153,12 +142,14 @@
         </div>
     @endif
 
+{{--    Content of the screen --}}
     <div class="container mx-auto mt-4">
         @yield('content')
     </div>
 </div>
 
 <script>
+    // Javascript support for changing language dropdown with images
     const dropdownButton = document.getElementById('dropdownButton');
     const dropdownMenu = document.getElementById('dropdownMenu');
 

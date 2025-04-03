@@ -10,7 +10,7 @@
             <h1 class="h1-screen">{{$isEnglish?'Search My Requests':'Vyhľadaj moju žiadosť'}}</h1>
         @endif
 
-        <!-- Filter Form -->
+{{--      Filter Form --}}
         <form action="{{ route('requests.index') }}" method="GET">
             <div class="div-form">
                 @if ( $allowApproval )
@@ -44,7 +44,7 @@
                     </select>
                 </div>
 
-
+                    {{--                    Date picker control from flowbite library --}}
                 <div class="div-input">
                     <label for="experiment_date_from" class="form-label">{{$isEnglish?'Experiment Date From':'Dátum experimentu od'}}</label>
                     <div class="relative max-w-sm">
@@ -61,6 +61,7 @@
                     </div>
                 </div>
 
+                    {{--                    Date picker control from flowbite library --}}
                 <div class="div-input">
                     <label for="experiment_date_to" class="form-label">{{$isEnglish?'Experiment Date To':'Dátum experimentu do'}}</label>
                     <div class="relative max-w-sm">
@@ -136,7 +137,7 @@
                     <td class="table-cell text-left">{{ $request->localDate($request->experiment_date)}}</td>
 
                     <td class="table-cell">
-                        <!-- You can add more action links here, like Edit or Delete -->
+{{--                       You can add more action links here, like Edit or Delete --}}
                         <a href="{{ route('requests.show', $request->id) }}" class="bg-blue-500 button-action">{{$isEnglish?'View':'Zobraziť'}}</a>
                         @if ( $request->state_id == 1 || $allowApproval )
                             <a href="{{ route('requests.edit', $request) }}" class="bg-yellow-500 button-action">{{$isEnglish?'Edit':'Zmeniť'}}</a>
@@ -180,7 +181,7 @@
             @endforeach
             </tbody>
         </table>
-        <!-- Pagination -->
+{{--         Pagination --}}
         <div class="mt-4">
             {{ $requests->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>

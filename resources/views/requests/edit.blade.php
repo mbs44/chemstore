@@ -23,7 +23,7 @@
 
                     </select>
                 </div>
-
+                {{--                    Date picker control from flowbite library --}}
                 <div class="div-input">
                     <label for="experiment_date" class="form-label">{{$isEnglish?'Experiment Date':'Dátum experimentu'}}</label>
                     <div class="relative max-w-sm">
@@ -40,6 +40,7 @@
                     </div>
                 </div>
 
+                {{--                Inner table for adding chemicals--}}
                 <div class="div-full">
                     <h2 class="text-lg font-semibold mb-2">{{$isEnglish?'Chemical List':'Zoznam chemikálií'}}</h2>
                     <table class="min-w-full border-collapse border border-gray-200">
@@ -124,6 +125,7 @@
             const newChemicalEntry = document.createElement('tr');
             newChemicalEntry.classList.add('chemical-entry');
 
+            // Dynamic adding new inner table row in javascript
             newChemicalEntry.innerHTML = `
             <td class="table-cell">
                 <select name="chemicals[${chemicalCount}][chemical_id]"
@@ -153,7 +155,7 @@
             });
         });
 
-        // Add event listener for the initial delete button
+        // Add event listener for the initial delete button for rows loaded from database
         document.querySelectorAll('.delete-chemical').forEach(button => {
             button.addEventListener('click', function() {
                 const chemicalEntry = button.closest('.chemical-entry');

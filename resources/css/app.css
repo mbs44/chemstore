@@ -7,6 +7,7 @@
 /* public/css/app.css */
 
 /* Custom form field styles */
+
 .form-input {
     @apply block w-full p-2 border border-gray-300 rounded-md;
 }

@@ -17,9 +17,17 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
+/**
+ * Implements CRUD on chemicals
+ */
 class ChemicalController extends Controller
 {
 
+    /**
+     * implements search logic and returns result to index blade
+     * @param Request $request
+     * @return View
+     */
     public function index(Request $request) :View
     {
         // Get the filter parameters from the request
@@ -29,10 +37,10 @@ class ChemicalController extends Controller
         $supplies_id = $request->input('supplies_id');
         $measureUnitId = $request->input('measure_unit_id');
 
-        // Start the query
+        // Start the query builder
         $query = Chemical::query();
 
-        // Apply the filter parameters to the database query
+        // Apply the filter parameters to the database query using predefined operators
         if ($chemicalNameEn) {
             $query->where('chemical_name_en', 'like', '%' . $chemicalNameEn . '%');
         }
@@ -49,6 +57,7 @@ class ChemicalController extends Controller
             $query->where('measure_unit_id',  $measureUnitId);
         }
 
+        // dangerous properties are searched by joining chemical_dangerous_properties
         if ($request->has('dangerous_properties')) {
             $selectedProperties = $request->input('dangerous_properties');
             $query->whereHas('dangerousProperties', function ($query) use ($selectedProperties) {
@@ -73,11 +82,12 @@ class ChemicalController extends Controller
 
         // Retrieve chemicals with sorting and pagination
         $chemicals = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
-        // Fetch all measure units for the filter
+        // Fetch all code table values from measure units, supplies and dangerous properties
         $measureUnits = MeasureUnit::all();
         $supplies = Supplies::all();
         $dangerousProperties = DangerousProperty::all();
 
+        //provide security flag for teachers
         $allowEdit = $this->checkRoles([ 'admin', 'teacher']);
         return view('chemicals.index',
             compact('chemicals', 'sortColumn',
@@ -86,12 +96,14 @@ class ChemicalController extends Controller
     }
 
     /**
+     * calls create blade template
      * @throws AuthorizationException
      */
     public function create(): View
     {
         $this->assertRoles( [ 'admin', 'teacher']);
 
+        // Fetch all code table values from measure units, safety items, supplies and dangerous properties
         $dangerousProperties = DangerousProperty::all();
         $safetyItems = SafetyItem::all();
         $supplies = Supplies::all();
@@ -101,6 +113,9 @@ class ChemicalController extends Controller
     }
 
     /**
+     * creates new chemical in database
+     * @param Request $request
+     * @return RedirectResponse
      * @throws AuthorizationException
      */
     public function store(Request $request): RedirectResponse
@@ -125,45 +140,68 @@ class ChemicalController extends Controller
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
 
+        // create new chemical
         $chemical = Chemical::create($request->all());
 
+        // attach dangerous properties
         if ($request->has('dangerous_properties')) {
             $chemical->dangerousProperties()->attach($request->dangerous_properties);
         }
 
+        // attach safety items
         if ($request->has('safety_items')) {
             $chemical->safetyItems()->attach($request->safety_items);
         }
 
+        // redirect to search
         return redirect()->route('chemicals.index')->with('success', 'Chemical created successfully.');
     }
 
+    /**
+     * calls chemical show detail blade
+     * @param $id
+     * @return View
+     */
     public function show($id): View
     {
         $isTeacher = $this->checkRoles([ 'admin', 'teacher']);
+
+        // Fetch all code table values from measure units, supplies and dangerous properties
         $chemical = Chemical::with(['measureUnit', 'supplies', 'dangerousProperties'])->findOrFail($id);
         return view('chemicals.show', compact('chemical',   'isTeacher'));
     }
 
     /**
+     * calls edit blade
+     * @param Chemical $chemical
+     * @return View
      * @throws AuthorizationException
      */
     public function edit(Chemical $chemical): View
     {
         $this->assertRoles( [ 'admin', 'teacher']);
 
+        // Fetch all code table values from measure units, supplies and dangerous properties
         $dangerousProperties = DangerousProperty::all();
         $safetyItems = SafetyItem::all();
         $supplies = Supplies::all();
+        $measureUnits = MeasureUnit::all(); // Fetch all measure units
+
+        // select current attached values
         $selectedItems = $chemical->safetyItems->pluck('id')->toArray();
         $selectedProperties = $chemical->dangerousProperties->pluck('id')->toArray(); // Get the IDs of the associated dangerous properties
-        $measureUnits = MeasureUnit::all(); // Fetch all measure units
+
         return view('chemicals.edit', compact(
             'chemical', 'measureUnits', 'supplies', 'safetyItems',
             'dangerousProperties', 'selectedProperties', 'selectedItems'));
     }
 
+
     /**
+     * updates chemical in database
+     * @param Request $request
+     * @param Chemical $chemical
+     * @return RedirectResponse
      * @throws AuthorizationException
      */
     public function update(Request $request, Chemical $chemical): RedirectResponse
@@ -188,21 +226,32 @@ class ChemicalController extends Controller
             'dangerous_properties.*' => 'exists:dangerous_properties,id', // Validate each ID exists
         ]);
 
+        // update chemical record
         $chemical->update($request->all());
+
+        // attach dangerous properties
         $chemical->dangerousProperties()->sync($request->dangerous_properties);
+
+        // attach safety items
         $chemical->safetyItems()->sync($request->safety_items);
 
         return redirect()->route('chemicals.index')->with('success', 'Chemical updated successfully.');
     }
 
     /**
+     * deletes record from chemicals
+     * @param Chemical $chemical
+     * @return RedirectResponse
      * @throws AuthorizationException
      */
     public function destroy(Chemical $chemical): RedirectResponse
     {
         $this->assertRoles( [ 'admin', 'teacher']);
 
+        // delete record
         $chemical->delete();
+
+        // redirect to chemicals index
         return redirect()->route('chemicals.index')->with('success', 'Chemical deleted successfully.');
     }
 }

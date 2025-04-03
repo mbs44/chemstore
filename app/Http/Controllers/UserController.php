@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+/**
+ * User edit roles support
+ */
 class UserController extends Controller
 {
     public static function isAdmin() : bool
@@ -16,11 +19,17 @@ class UserController extends Controller
         return Controller::userInRole('admin');
     }
 
-    // Display a listing of the experiments
+    /**
+     * calls blade template for search users
+     * @param Request $request
+     * @return View
+     * @throws AuthorizationException
+     */
     public function index(Request $request): View
     {
         $this->assertRoles( [ 'admin']);
 
+        // start query builder
         $query = User::query();
         $username = $request->input('username');
 

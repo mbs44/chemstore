@@ -9,15 +9,26 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+/**
+ * Implements CRUD for experiments
+ */
 class ExperimentController extends Controller
 {
-    // Display a listing of the experiments
+    /**
+     * implements search logic and returns result to index blade
+     * @param Request $request
+     * @return View
+     */
     public function index(Request $request): View
     {
-        $query = Experiment::query();
+        // Get the filter parameters from the request
         $nameEn = $request->input('name_en');
         $nameSk = $request->input('name_sk');
-        // Apply the filter parameters to the database query
+
+        // Start query builder
+        $query = Experiment::query();
+
+        // Apply the filter parameters to the database query using predefined operators
         if ($nameEn) {
             $query->where('name_en', 'like', '%' . $nameEn . '%');
         }
@@ -25,6 +36,7 @@ class ExperimentController extends Controller
             $query->where('name_sk', 'like', '%' . $nameEn . '%');
         }
 
+        // requested chemicals are searched by joining chemical_experiment
         if ($request->has('chemicals')) {
             $selectedChemicals = $request->input('chemicals');
             $query->whereHas('chemicals', function ($query) use ($selectedChemicals) {
@@ -46,36 +58,42 @@ class ExperimentController extends Controller
             $sortDirection = 'asc';
         }
 
-        // Retrieve chemicals with sorting and pagination
+        // Retrieve experiments with sorting and pagination
         $experiments = $query->orderBy($sortColumn, $sortDirection)->paginate(25);
+
+        // Load all chemicals values as a code table
         $chemicals = Chemical::all();
+        // security flag
         $allowEdit = $this->checkRoles([ 'admin', 'teacher']);
         return view('experiments.index',
             compact('experiments', 'sortColumn', 'sortDirection',
                 'chemicals', 'selectedChemicals', 'allowEdit'));
     }
 
-    // Show the form for creating a new experiment
-
     /**
+     * Show the form for creating a new experiment
      * @throws AuthorizationException
      */
     public function create(): View
     {
         $this->assertRoles( [ 'admin', 'teacher']);
 
+        // Load all chemicals values as a code table
         $chemicals = Chemical::all();
         return view('experiments.create', compact('chemicals'));
     }
 
-    // Store a newly created experiment in storage
+
+
+    /**
+     * Store a newly created experiment in database
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
     public function store(Request $request): RedirectResponse
     {
-        $userRoles = session('user_roles', []);
-        if (!in_array('admin', $userRoles, true) &&
-            !in_array('teacher', $userRoles, true)) {
-            throw new AuthorizationException('You do not have permission for this action.');
-        }
+        $this->assertRoles( [ 'admin', 'teacher']);
 
         $request->validate([
             'name_en' => 'required|string|max:255',
@@ -88,6 +106,7 @@ class ExperimentController extends Controller
 
         $experiment = Experiment::create($request->all()); // Create a new experiment
 
+        // attach required chemicals
         if ($request->has('chemicals')) {
             $experiment->chemicals()->attach($request->chemicals);
         }
@@ -95,30 +114,40 @@ class ExperimentController extends Controller
         return redirect()->route('experiments.index')->with('success', 'Experiment created successfully.');
     }
 
-    // Display the specified experiment
+    /**
+     * call show blade for the specified experiment
+     * @param $id
+     * @return View
+     */
     public function show($id): View
     {
+        // load experiment detail with required chemicals
         $experiment = Experiment::with( 'chemicals' )->findOrFail($id); // Find the experiment by ID
         return view('experiments.show', compact('experiment'));
     }
 
-    // Show the form for editing the specified experiment
-
     /**
+     * Show the form for editing the specified experiment
+     * @param Experiment $experiment
+     * @return View
      * @throws AuthorizationException
      */
     public function edit(Experiment $experiment): View
     {
         $this->assertRoles( [ 'admin', 'teacher']);
 
+        // load chemicals as code table
         $chemicals = Chemical::all();
+        // attach required chemicals
         $selectedChemicals = $experiment->chemicals->pluck('id')->toArray();// Find the experiment by ID
         return view('experiments.edit', compact('experiment', 'chemicals', 'selectedChemicals'));
     }
 
-    // Update the specified experiment in storage
-
     /**
+     * Update the specified experiment in storage
+     * @param Request $request
+     * @param Experiment $experiment
+     * @return RedirectResponse
      * @throws AuthorizationException
      */
     public function update(Request $request, Experiment $experiment): RedirectResponse
@@ -134,14 +163,18 @@ class ExperimentController extends Controller
             'chemicals.*' => 'exists:chemicals,id', // Validate each ID exists
         ]);
 
-        $experiment->update($request->all()); // Update the experiment
+        // updates experiment record
+        $experiment->update($request->all());
+
+        // attach required chemicals
         $experiment->chemicals()->sync($request->chemicals);
         return redirect()->route('experiments.index')->with('success', 'Experiment updated successfully.');
     }
 
-    // Remove the specified experiment from storage
-
     /**
+     * Remove the specified experiment from database
+     * @param Experiment $experiment
+     * @return RedirectResponse
      * @throws AuthorizationException
      */
     public function destroy(Experiment $experiment): RedirectResponse

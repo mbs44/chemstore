@@ -23,6 +23,7 @@
                 </div>
                 @endif
 
+{{--                    Required chemicals multi select control from preline library --}}
                 <div class="div-full">
                     <label for="chemicals" class="form-label">{{$isEnglish?'Required Chemicals':'Povinné chemikálie'}}</label>
                     <select id="chemicals" name="chemicals[]" multiple="" data-hs-select='{
@@ -87,7 +88,7 @@
             @endforeach
             </tbody>
         </table>
-        <!-- Pagination -->
+{{--         Pagination --}}
         <div class="mt-4">
             {{ $experiments->appends(['sort' => $sortColumn, 'direction' => $sortDirection])->links() }}
         </div>

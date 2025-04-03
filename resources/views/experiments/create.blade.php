@@ -29,10 +29,10 @@
                 <textarea class="form-textarea" id="description_sk" name="description_sk" rows="3"></textarea>
             </div>
 
+{{--                    Required chemicals multi select control from preline library --}}
             <div class="div-full">
                 <label for="chemicals" class="form-label">Required Chemicals:</label>
 
-                <!-- Select -->
                 <select id="chemicals" name="chemicals[]" multiple="" data-hs-select='{
   "placeholder": "Select chemicals ...",
   "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",

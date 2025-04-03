@@ -23,59 +23,82 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+/**
+ * Contains actions for student request state diagram
+ */
 class RequestActionsController extends Controller
 {
-    // Remove the specified request from storage
+    /**
+     * Approves student request
+     * @param HttpRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
     public function approve(HttpRequest $request): RedirectResponse
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
-        // Validate the request data
+        // Load the request by id
         $requestModel = RequestModel::findOrFail($request->id);
+
+        // load the current user from users table
         $dbUser = User::query()->where('username', $request->user()->uid)->first();
 
+        // update state
         $requestModel->update([
             'state_id' => 3, // 'approved',
-            'resolved_by' => $dbUser->id,
-            'resolved_date' => Carbon::today()->toDateTimeString()
+            'resolved_by' => $dbUser->id, // current teacher id
+            'resolved_date' => Carbon::today()->toDateTimeString() // current date
         ]);
         return redirect()->route('requests.index')->with('success', 'StudentRequest approved.');
     }
 
-    // Remove the specified request from storage
+    /**
+     * Cancels student request
+     * @param HttpRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
     public function cancel(HttpRequest $request): RedirectResponse
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
-        // Validate the request data
+        // Load the request by id
         $requestModel = RequestModel::findOrFail($request->id);
+        // load the current user from users table
         $dbUser = User::query()->where('username', $request->user()->uid)->first();
         $requestModel->update([
             'state_id' => 2, // 'cancelled',
-            'resolved_by' => $dbUser->id,
-            'resolved_date' => Carbon::today()->toDateTimeString()
+            'resolved_by' => $dbUser->id, // current teacher id
+            'resolved_date' => Carbon::today()->toDateTimeString() // current date
         ]);
         return redirect()->route('requests.index')->with('success', 'StudentRequest cancelled.');
     }
 
-    // Remove the specified request from storage
+    /**
+     * Process request / issue chemicals
+     * @param HttpRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
     public function process(HttpRequest $request): RedirectResponse
     {
         $this->assertRoles( [ 'admin', 'teacher']);
         $validatedData = $request->validate([
             'id' => 'required|integer|exists:student_requests,id', // Example validation
         ]);
-        // Validate the request data
+        // Load the request by id
         $requestModel = RequestModel::findOrFail($request->id);
+        // load the current user from users table
         $dbUser = User::query()->where('username', $request->user()->uid)->first();
         $requestModel->update([
             'state_id' => 4 ,// 'processed',
-            'resolved_by' => $dbUser->id,
-            'resolved_date' => Carbon::today()->toDateTimeString()
+            'resolved_by' => $dbUser->id, // current teacher id
+            'resolved_date' => Carbon::today()->toDateTimeString() // current date
         ]);
         return redirect()->route('requests.index')->with('success', 'StudentRequest processed.');
     }

@@ -92,10 +92,10 @@
                               class="form-input">{{ old('description_sk', $chemical->description_sk) }}</textarea>
                 </div>
 
+{{--            Dangerous properties multi select control from preline library--}}
                 <div class="div-full">
                     <label for="dangerous_properties" class="form-label">Dangerous Properties:</label>
 
-                    <!-- Select -->
                     <select id="dangerous_properties" name="dangerous_properties[]" multiple="" data-hs-select='{
   "placeholder": "Select property ...",
   "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
@@ -117,10 +117,11 @@
                     </select>
 
                 </div>
+
+{{--            Safety items multi select control from preline library--}}
                 <div class="div-full">
                     <label for="safety_items" class="form-label">Safety Items:</label>
 
-                    <!-- Select -->
                     <select id="safety_items" name="safety_items[]" multiple="" data-hs-select='{
   "placeholder": "Select item ...",
   "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
