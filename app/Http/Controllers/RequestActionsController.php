@@ -44,7 +44,7 @@ class RequestActionsController extends Controller
         $requestModel = RequestModel::findOrFail($request->id);
 
         // load the current user from users table
-        $dbUser = User::query()->where('username', $request->user()->uid)->first();
+        $dbUser = User::query()->where('username', $request->user()->getUserName() )->first();
 
         // update state
         $requestModel->update([
@@ -70,7 +70,7 @@ class RequestActionsController extends Controller
         // Load the request by id
         $requestModel = RequestModel::findOrFail($request->id);
         // load the current user from users table
-        $dbUser = User::query()->where('username', $request->user()->uid)->first();
+        $dbUser = User::query()->where('username', $request->user()->getUserName())->first();
         $requestModel->update([
             'state_id' => 2, // 'cancelled',
             'resolved_by' => $dbUser->id, // current teacher id
@@ -94,7 +94,7 @@ class RequestActionsController extends Controller
         // Load the request by id
         $requestModel = RequestModel::findOrFail($request->id);
         // load the current user from users table
-        $dbUser = User::query()->where('username', $request->user()->uid)->first();
+        $dbUser = User::query()->where('username', $request->user()->getUserName())->first();
         $requestModel->update([
             'state_id' => 4 ,// 'processed',
             'resolved_by' => $dbUser->id, // current teacher id

@@ -36,7 +36,7 @@
             <!-- Right Part: Login information -->
             <div class="flex-2 bg-gray-200 p-4 text-right">
                 @if (Auth::check())
-                    <p>Hello, You are logged in as {{ Auth::user()->uid[0] }}</p>
+                    <p>Hello, You are logged in as {{ Auth::user()->getUserName() }}</p>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <a href="{{ route('chemicals.index') }}" class="button-submit">Enter In</a>

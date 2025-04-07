@@ -61,7 +61,7 @@ class RequestController extends Controller
             }
         } else {
             // if user is student add filter for current user is the creator of request
-            $dbUser = User::query()->where('username', $request->user()->uid)->first();
+            $dbUser = User::query()->where('username', $request->user()->getUserName())->first();
             $query->where('requested_by',$dbUser->id );
         }
 
@@ -149,7 +149,7 @@ class RequestController extends Controller
         ]);
 
         // load current user data from database
-        $dbUser = User::query()->where('username', $request->user()->uid)->first();
+        $dbUser = User::query()->where('username', $request->user()->getUserName())->first();
 
         // Input date in dd.mm.yyyy format
         $dateString = $request->experiment_date;
@@ -245,7 +245,7 @@ class RequestController extends Controller
 
         if ( !$allowApproval) {
             // allow edit for students only in state initial and current user created the request
-            $dbUser = User::query()->where('username', $request->user()->uid)->first();
+            $dbUser = User::query()->where('username', $request->user()->getUserName())->first();
             // do not allow changing state and teacher note
             if ( $studentRequest->state_id != 1 ||
                 $request->teacher_note ||
