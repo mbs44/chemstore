@@ -23,8 +23,10 @@ class Chemical extends Model
         'chemical_name_sk',
         'chemical_name_en',
         'chemical_formula',
-
-
+        'disposal_sk',
+        'disposal_en',
+        'access_sk',
+        'access_en',
         'supplies_id',
         'measure_unit_id',
         'description_sk',
